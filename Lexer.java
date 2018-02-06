@@ -4,11 +4,16 @@ import java.util.Scanner;
 
 
 public class Lexer {
-
+	//input stream to read tokens from
 	private Scanner input;
-	
+	//flag to whether print debug message by lexer 
 	private boolean debug;
 	
+	/*
+	 *Class constructor that creates a new Lexer Object
+	 *
+	 *@param debug flag to whether we should print debug message 
+	 */
 	public Lexer(Scanner input, boolean debug){
 		this.debug = debug;
 		this.input = input;
