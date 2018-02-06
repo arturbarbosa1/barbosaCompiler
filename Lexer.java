@@ -18,5 +18,16 @@ public class Lexer {
 		this.debug = debug;
 		this.input = input;
 		}
+	
+public List<Token> readTokens(){
+		List<Token> tokens = new ArrayList<Token>();
+		String line;
+		int currentLine = 1;
+while(input.hasNextLine()){
+			line = input.nextLine();
+			List<Token> nextTokens = getTokensFromString(line, currentLine);
+			tokens.addAll(nextTokens);
+			currentLine++;
+				
 
     
