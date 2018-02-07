@@ -28,6 +28,7 @@ while(input.hasNextLine()){
 			List<Token> nextTokens = getTokensFromString(line, currentLine);
 			tokens.addAll(nextTokens);
 			currentLine++;
+}
 				
 
     
