@@ -42,4 +42,95 @@ while(input.hasNextLine()){
 		Token tok = null;
 		int i = 0;
 		boolean inQuote = false;
+		while(i < s.length()){
+			char c = s.charAt(i);
+			if(!inQuote && (c == ' ' || c == '\t') ){
+				i++;
+				continue;
+			}
+			if(c == '"'){ 
+				nextTokens.add(new Token(c+"", Token.Type.QUOTE, lineNo));
+				inQuote = !inQuote;
+			}
+			else if(c == '(') nextTokens.add(new Token(c+"", Token.Type.LPAREN, lineNo));
+			else if(c == ')') nextTokens.add(new Token(c+"", Token.Type.RPAREN, lineNo));
+			else if(c == '{') nextTokens.add(new Token(c+"", Token.Type.LBRACE, lineNo)) ;
+			else if(c == '}') nextTokens.add(new Token(c+"", Token.Type.RBRACE, lineNo));
+			else if(c == '$') nextTokens.add(new Token(c+"", Token.Type.EOP, lineNo));
+			else if(c == '+') nextTokens.add(new Token(c+"", Token.Type.PLUS, lineNo));
+			else if(c == ' ') nextTokens.add(new Token(c+"", Token.Type.CHAR, lineNo));
+			else if(Character.isDigit(c)) nextTokens.add(new Token(c+"", Token.Type.DIGIT, lineNo));
+			else if(c == '='){
+				if(i < s.length()-1){
+					char c2 = s.charAt(i+1);
+					if(c2 == '='){
+						nextTokens.add(new Token("==", Token.Type.BOOLOP_EQUAL, lineNo));
+						i++;
+					}
+					else{
+						nextTokens.add(new Token(c+"", Token.Type.ASSIGN, lineNo));
+					}
+				}
+				else{
+					nextTokens.add(new Token(c+"", Token.Type.ERROR, lineNo));
+				}
+			}
+			else if(c == '!'){
+				if(i < s.length()-1){
+					char c2 = s.charAt(i+1);
+					if(c2 == '='){
+						nextTokens.add(new Token("!=", Token.Type.BOOLOP_NOT_EQUAL, lineNo));
+						i++;
+					}
+					else{
+						nextTokens.add(new Token(c+"", Token.Type.ERROR, lineNo));
+					}
+				}
+				else{
+					nextTokens.add(new Token(c+"", Token.Type.ERROR, lineNo));
+				}
+			}
+			else if(s.startsWith("print", i)){
+				nextTokens.add(new Token("print", Token.Type.PRINT, lineNo));
+				i += 5; continue;
+			}
+			else if(s.startsWith("int", i)){
+				nextTokens.add(new Token("int", Token.Type.TYPE, lineNo));
+				i += 3;  continue;
+			}
+			else if(s.startsWith("string", i)){
+				nextTokens.add(new Token("string", Token.Type.TYPE, lineNo));
+				i += 6; continue;
+			}
+			else if(s.startsWith("boolean", i)){
+				nextTokens.add(new Token("boolean", Token.Type.TYPE, lineNo));
+				i += 7; continue;
+			}
+			else if(s.startsWith("false", i)){
+				nextTokens.add(new Token("false", Token.Type.BOOL_FALSE, lineNo));
+				i += 5; continue;
+			}
+			else if(s.startsWith("true", i)){
+				nextTokens.add(new Token("true", Token.Type.BOOL_TRUE, lineNo));
+				i += 4; continue;
+			}
+			else if(Character.isLowerCase(c)){
+				if(inQuote){
+					nextTokens.add(new Token(c+"", Token.Type.CHAR, lineNo));
+				}
+				else{
+					nextTokens.add(new Token(c+"", Token.Type.ID, lineNo));
+				}
+			}
+			else nextTokens.add(new Token(c+"", Token.Type.ERROR, lineNo));
+			
+			i++;
+		}
+		
+		return nextTokens;
+	}
+	
+
+}
+
 		
