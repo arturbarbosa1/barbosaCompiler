@@ -29,6 +29,17 @@ while(input.hasNextLine()){
 			tokens.addAll(nextTokens);
 			currentLine++;
 }
-				
+			return tokens;
+	}			
 
-    
+    	/**
+	 * Read all tokens in a string from input
+	 * 
+	 * @return a List<Token> of all tokens read
+	 */
+	private List<Token> getTokensFromString(String s, int lineNo){
+		List<Token> nextTokens = new ArrayList<Token>();
+		Token tok = null;
+		int i = 0;
+		boolean inQuote = false;
+		
