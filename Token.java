@@ -1,4 +1,14 @@
-
+ /**
+   * file: Token.java
+   * author: Artur Barbosa
+   * course: CMPT 435
+   * assignment: project 1 lexer
+   * due date: 2/6/2018
+   * 
+   * 
+   * This file contains the token class for the lexer.project1
+   *
+   */
 public class Token {
 	
 	// constants for all token types
