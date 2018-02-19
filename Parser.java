@@ -19,3 +19,14 @@ import java.util.Stack;
  * as per grammar.
  *
  */
+public class Parser {
+
+	private List<Token> tokens;
+	private boolean debug;
+	private static int progNum = 1;
+	
+	private String cst = "";
+	private boolean parseError = false;
+	private boolean warning = false;
+	private int nextTokenIndex;
+	Stack<Integer> cstIdentValues = new Stack<Integer>();
