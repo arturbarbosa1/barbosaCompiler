@@ -1,3 +1,14 @@
+ /**
+   * file: Lexer.java
+   * author: Artur Barbosa
+   * course: CMPT 435
+   * assignment: project 1 Lexer 
+   * due date: 3/6/2018
+   * 
+   * 
+   * This file contains the lexer for project 1.
+   *
+   */
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
