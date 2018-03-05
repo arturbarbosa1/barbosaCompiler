@@ -54,3 +54,8 @@ public class Parser {
 		return tokens.get(nextTokenIndex);
 	}
 	
+	private void appendCSTHeader(String header, int indentation) {		
+		for(int i=0; i < indentation; i++) cst += "-";
+		cst += header + "\n";
+	}
+	
