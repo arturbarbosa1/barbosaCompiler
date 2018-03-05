@@ -30,7 +30,12 @@ public class Parser {
 	private boolean warning = false;
 	private int nextTokenIndex;
 	Stack<Integer> cstIdentValues = new Stack<Integer>();
-	
+        /**
+	 * Class constructor that creates a new Parser for a given set of Token objects
+	 * 
+	 * @param tokens a List of Token objects 
+	 * @param debug boolean flag whether to print debug message to console
+	 */	
 	public Parser(List<Token> tokens, boolean debug){
 		this.tokens = tokens;
 		this.debug = debug;
