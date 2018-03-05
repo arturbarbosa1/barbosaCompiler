@@ -78,3 +78,4 @@ public class Parser {
 		if(t == null){
 			warning = true;
 			return;
+		}
