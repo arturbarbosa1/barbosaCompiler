@@ -59,3 +59,11 @@ public class Parser {
 		cst += header + "\n";
 	}
 	
+	public void parse(){
+	if(debug){
+		System.out.println("PARSER: Parsing program " + progNum + "...");
+		System.out.println("PARSER: parse()");
+		}		
+		parseProgram();
+		progNum++;
+	}
