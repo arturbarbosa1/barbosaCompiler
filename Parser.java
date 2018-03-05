@@ -60,9 +60,9 @@ public class Parser {
 	}
 	
 	public void parse(){
-	if(debug){
-		System.out.println("PARSER: Parsing program " + progNum + "...");
-		System.out.println("PARSER: parse()");
+		if(debug){
+			System.out.println("PARSER: Parsing program " + progNum + "...");
+			System.out.println("PARSER: parse()");
 		}		
 		parseProgram();
 		progNum++;
