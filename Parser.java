@@ -44,3 +44,8 @@ public class Parser {
 		nextTokenIndex = 0;
 	}
 	
+	private Token getNextToken(){
+		if(nextTokenIndex >= tokens.size()) return null;
+		return tokens.get(nextTokenIndex++);
+	}
+	
