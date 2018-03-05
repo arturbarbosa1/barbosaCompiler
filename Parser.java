@@ -30,3 +30,11 @@ public class Parser {
 	private boolean warning = false;
 	private int nextTokenIndex;
 	Stack<Integer> cstIdentValues = new Stack<Integer>();
+public Parser(List<Token> tokens, boolean debug)
+{
+this.tokens = tokens;
+this.debug = debug;
+cst = "";
+parseError = false;
+nextTokenIndex = 0
+}
