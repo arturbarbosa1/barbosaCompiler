@@ -79,3 +79,13 @@ public class Parser {
 			warning = true;
 			return;
 		}
+		if(t.getType() != Token.Type.EOP){
+			if(debug){
+				System.out.println("PARSER: ERROR: Expected [EOP] Got " + t.toString());
+			}
+			parseError = true;
+			return;
+		}
+		cst += "-[$]";
+	}
+	
