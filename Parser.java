@@ -67,3 +67,14 @@ public class Parser {
 		parseProgram();
 		progNum++;
 	}
+	
+	private void parseProgram(){
+		if(debug) System.out.println("PARSER: parseProgram()");
+		cst += "<Program>\n";
+		cstIdentValues.push(1);
+		parseBlock();
+		if(parseError) return;
+		Token t = getNextToken();
+		if(t == null){
+			warning = true;
+			return;
