@@ -88,16 +88,17 @@ public class Parser {
 		}
 		cst += "-[$]";
 	}
-private void parseBlock(){
-if(debug) System.out.println("PARSER: parseBlock()");
-int indentation = cstIdentValues.peek();
-appendCSTHeader("<Block>", indentation);
-Token t = getNextToken();
-if(t.getType() != Token.Type.LBRACE){
-	if(debug){
-		System.out.println("PARSER: ERROR: Expected [T_OPENING_BRACE] Got " + t.toString());
-	}
-	parseError = true;
-	return;
-}
-appendCSTHeader("[{]", indentation+1);
+
+	private void parseBlock(){
+		if(debug) System.out.println("PARSER: parseBlock()");
+		int indentation = cstIdentValues.peek();
+		appendCSTHeader("<Block>", indentation);
+		Token t = getNextToken();
+		if(t.getType() != Token.Type.LBRACE){
+			if(debug){
+				System.out.println("PARSER: ERROR: Expected [T_OPENING_BRACE] Got " + t.toString());
+			}
+			parseError = true;
+			return;
+		}
+		appendCSTHeader("[{]", indentation+1);
