@@ -100,3 +100,4 @@ if(t.getType() != Token.Type.LBRACE){
 	parseError = true;
 	return;
 }
+appendCSTHeader("[{]", indentation+1);
