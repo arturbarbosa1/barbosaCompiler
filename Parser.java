@@ -102,3 +102,7 @@ public class Parser {
 			return;
 		}
 		appendCSTHeader("[{]", indentation+1);
+		
+		cstIdentValues.push(indentation+1);
+		parseStatementList();
+	}
