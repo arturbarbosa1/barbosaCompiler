@@ -252,4 +252,22 @@ public class Parser {
 		cstIdentValues.pop();
 	}
 	
+	private void parseIntExpr(){
+		if(debug) System.out.println("PARSER: parseIntExpr()");
+		int indentation = cstIdentValues.peek();
+		appendCSTHeader("<IntExpr>", indentation);
+		cstIdentValues.push(indentation+1);
+		parseDigit();
+		if(parseError) return;
+		Token t = peekNextToken();
+		if(t.getType() == Token.Type.PLUS){
+			cstIdentValues.push(indentation+1);
+			parseIntOp();
+			if(parseError) return;
+			cstIdentValues.push(indentation+1);
+			parseExpr();
+			if(parseError) return;
+		}
+		cstIdentValues.pop();
+	}
 
