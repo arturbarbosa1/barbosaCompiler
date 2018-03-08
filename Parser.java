@@ -217,4 +217,39 @@ public class Parser {
 		if(debug) System.out.println("PARSER: parseIfStatement()");
 	}
 	
+	private void parseExpr(){
+		if(debug) System.out.println("PARSER: parseExpr()");
+		int indentation = cstIdentValues.peek();
+		appendCSTHeader("<Expr>", indentation);
+		Token t = peekNextToken();
+		if(t.getType() == Token.Type.DIGIT){
+			cstIdentValues.push(indentation+1);
+			parseIntExpr();
+			if(parseError) return;
+		}
+		else if(t.getType() == Token.Type.QUOTE){
+			cstIdentValues.push(indentation+1);
+			parseStringExpr();
+			if(parseError) return;
+		}
+		else if(t.getType() == Token.Type.LPAREN){
+			cstIdentValues.push(indentation+1);
+			parseBooleanExpr();
+			if(parseError) return;
+		}
+		else if(t.getType() == Token.Type.ID){
+			cstIdentValues.push(indentation+1);
+			parseId();
+			if(parseError) return;
+		}
+		else{
+			if(debug){
+				System.out.println("PARSER: ERROR: Expected Expr Got " + t.toString());
+			}
+			parseError = true;
+			return;
+		}
+		cstIdentValues.pop();
+	}
+	
 
