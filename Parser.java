@@ -133,4 +133,34 @@ public class Parser {
 		}		
 		cstIdentValues.pop();
 	}
+	private void parseStatement(){
+		if(debug) System.out.println("PARSER: parseStatement()");
+		int indentation = cstIdentValues.peek();
+		appendCSTHeader("<Statement>", indentation);
+		Token t = peekNextToken();
+		cstIdentValues.push(indentation+1);
+		
+		switch(t.getType()){
+		case PRINT:
+			parsePrintStatement();
+			break;
+		case ID:
+			parseId();
+			break;
+		case TYPE:
+			parseType();
+			break;
+		case WHILE:
+			parseWhileStatement();
+			break;
+		case IF:
+			parseIfStatement();
+			break;
+		case LBRACE:
+			parseBlock();
+			break;
+		}
+		cstIdentValues.pop();
+	}
 	
+
