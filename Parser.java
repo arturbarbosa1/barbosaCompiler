@@ -270,4 +270,10 @@ public class Parser {
 		}
 		cstIdentValues.pop();
 	}
+	
+	private void parseStringExpr(){
+		if(debug) System.out.println("PARSER: parseStringExpr()");
+		int indentation = cstIdentValues.peek();
+		appendCSTHeader("<StringExpr>", indentation);
+		Token t = getNextToken();
 
