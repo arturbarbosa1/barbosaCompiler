@@ -117,4 +117,20 @@ public class Parser {
 		appendCSTHeader("[}]", indentation+1);
 		cstIdentValues.pop();
 	}
+	private void parseStatementList(){
+		if(debug) System.out.println("PARSER: parseStatementList()");
+		int indentation = cstIdentValues.peek();
+		appendCSTHeader("<Statemment List>", indentation);
+		Token t = peekNextToken();
+		
+		while(t.getType() == Token.Type.PRINT || t.getType() == Token.Type.ID
+				|| t.getType() == Token.Type.TYPE || t.getType() == Token.Type.WHILE
+				|| t.getType() == Token.Type.IF || t.getType() == Token.Type.LBRACE){
+			cstIdentValues.push(indentation+1);
+			parseStatement();
+			if(parseError) return;
+			t = peekNextToken();
+		}		
+		cstIdentValues.pop();
+	}
 	
