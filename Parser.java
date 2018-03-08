@@ -200,4 +200,21 @@ public class Parser {
 		cstIdentValues.pop();
 	}
 	
+	private void parseAssignmentStatement(){
+		if(debug) System.out.println("PARSER: parseAssignmentStatement()");
+		
+	}
+	
+	private void parseVarDecl(){
+		if(debug) System.out.println("PARSER: parseVarDecl()");
+	}
+	
+	private void parseWhileStatement(){
+		if(debug) System.out.println("PARSER: parseWhileStatement()");
+	}
+	
+	private void parseIfStatement(){
+		if(debug) System.out.println("PARSER: parseIfStatement()");
+	}
+	
 
