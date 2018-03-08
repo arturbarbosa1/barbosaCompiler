@@ -105,4 +105,16 @@ public class Parser {
 		
 		cstIdentValues.push(indentation+1);
 		parseStatementList();
+		if(parseError) return;
+		t = getNextToken();
+		if(t.getType() != Token.Type.RBRACE){
+			if(debug){
+				System.out.println("PARSER: ERROR: Expected [T_CLOSING_BRACE] Got " + t.toString());
+			}
+			parseError = true;
+			return;
+		}
+		appendCSTHeader("[}]", indentation+1);
+		cstIdentValues.pop();
 	}
+	
