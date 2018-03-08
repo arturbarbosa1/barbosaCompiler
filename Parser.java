@@ -184,5 +184,20 @@ public class Parser {
 			parseError = true;
 			return;
 		}
+		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
+		cstIdentValues.push(indentation+1);
+		parseExpr();
+		if(parseError) return;
+		t = getNextToken();
+		if(t.getType() != Token.Type.RPAREN){
+			if(debug){
+				System.out.println("PARSER: ERROR: Expected [T_CLOSING_PARENTHESIS] Got " + t.toString());
+			}
+			parseError = true;
+			return;
+		}
+		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
+		cstIdentValues.pop();
+	}
 	
 
