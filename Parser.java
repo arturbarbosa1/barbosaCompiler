@@ -163,4 +163,26 @@ public class Parser {
 		cstIdentValues.pop();
 	}
 	
+	private void parsePrintStatement(){
+		if(debug) System.out.println("PARSER: parsePrintStatement()");
+		int indentation = cstIdentValues.peek();
+		appendCSTHeader("<PrintStatement>", indentation);
+		Token t = getNextToken();
+		if(t.getType() != Token.Type.PRINT){
+			if(debug){
+				System.out.println("PARSER: ERROR: Expected [T_PRINT] Got " + t.toString());
+			}
+			parseError = true;
+			return;
+		}
+		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
+		t = getNextToken();
+		if(t.getType() != Token.Type.LPAREN){
+			if(debug){
+				System.out.println("PARSER: ERROR: Expected [T_OPENING_PARENTHESIS] Got " + t.toString());
+			}
+			parseError = true;
+			return;
+		}
+	
 
