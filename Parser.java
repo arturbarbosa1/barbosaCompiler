@@ -396,6 +396,27 @@ public class Parser {
 		cstIdentValues.pop();
 	}
 	
+	private void parseBoolOp(){
+		if(debug) System.out.println("PARSER: parseBoolOp()");
+		int indentation = cstIdentValues.peek();
+		appendCSTHeader("<BooleanOp>", indentation);
+		Token t = getNextToken();
+		if(t.getType() != Token.Type.BOOLOP_EQUAL && t.getType() != Token.Type.BOOLOP_NOT_EQUAL){
+			if(debug){
+				System.out.println("PARSER: ERROR: Expected [T_BOOL_OP] Got " + t.toString());
+			}
+			parseError = true;
+			return;
+		}
+		if(t.getType() == Token.Type.BOOLOP_EQUAL){
+			appendCSTHeader("[==]", indentation+1);
+		}
+		else{
+			appendCSTHeader("[!=]", indentation+1);
+		}
+		cstIdentValues.pop();
+	}
+	
 	
 
 	
