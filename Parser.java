@@ -363,5 +363,23 @@ public class Parser {
 		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
 		cstIdentValues.pop();
 	}
+	
+	private void parseSpace(){
+		if(debug) System.out.println("PARSER: parseSpace()");
+		int indentation = cstIdentValues.peek();
+		appendCSTHeader("<Space>", indentation);
+		Token t = getNextToken();
+		if(t.getType() != Token.Type.CHAR || t.getLexeme().equals(" ")){
+			if(debug){
+				System.out.println("PARSER: ERROR: Expected [T_SPACE] Got " + t.toString());
+			}
+			parseError = true;
+			return;
+		}
+		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
+		cstIdentValues.pop();
+	}
+	
+	
 
 	
