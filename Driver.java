@@ -1,3 +1,14 @@
+/**
+   * file: Driver.java
+   * author: Artur Barbosa
+   * course: CMPT 435
+   * assignment: project 2 Parser 
+   * due date: 3/6/2018
+   * Version:2
+   * 
+   * This file contains the Driver for project 2.
+   *
+   */
 import java.io.File;
 import java.util.List;
 import java.util.Scanner;
