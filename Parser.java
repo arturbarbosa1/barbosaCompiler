@@ -30,12 +30,13 @@ public class Parser {
 	private boolean warning = false;
 	private int nextTokenIndex;
 	Stack<Integer> cstIdentValues = new Stack<Integer>();
-        /**
+	
+	/**
 	 * Class constructor that creates a new Parser for a given set of Token objects
 	 * 
 	 * @param tokens a List of Token objects 
 	 * @param debug boolean flag whether to print debug message to console
-	 */	
+	 */
 	public Parser(List<Token> tokens, boolean debug){
 		this.tokens = tokens;
 		this.debug = debug;
@@ -44,21 +45,39 @@ public class Parser {
 		nextTokenIndex = 0;
 	}
 	
+	/**
+	 * Remove and return the next token from the input list of tokens.
+	 * 
+	 * @return the next Token object
+	 */
 	private Token getNextToken(){
 		if(nextTokenIndex >= tokens.size()) return null;
 		return tokens.get(nextTokenIndex++);
 	}
 	
+	/**
+	 * Get the next token from input list of tokens without removing it.
+	 * 
+	 * @return the next Token object
+	 */
 	private Token peekNextToken(){
 		if(nextTokenIndex >= tokens.size()) return null;
 		return tokens.get(nextTokenIndex);
 	}
 	
+	/**
+	 * Append CST header with current indentation to the CST
+	 * 
+	 * @param header the given header string
+	 */
 	private void appendCSTHeader(String header, int indentation) {		
 		for(int i=0; i < indentation; i++) cst += "-";
 		cst += header + "\n";
 	}
 	
+	/**
+	 * Parse to validate the list of Token lexed by Lexer
+	 */
 	public void parse(){
 		if(debug){
 			System.out.println("PARSER: Parsing program " + progNum + "...");
@@ -88,7 +107,7 @@ public class Parser {
 		}
 		cst += "-[$]";
 	}
-
+	
 	private void parseBlock(){
 		if(debug) System.out.println("PARSER: parseBlock()");
 		int indentation = cstIdentValues.peek();
@@ -117,6 +136,7 @@ public class Parser {
 		appendCSTHeader("[}]", indentation+1);
 		cstIdentValues.pop();
 	}
+	
 	private void parseStatementList(){
 		if(debug) System.out.println("PARSER: parseStatementList()");
 		int indentation = cstIdentValues.peek();
@@ -133,6 +153,7 @@ public class Parser {
 		}		
 		cstIdentValues.pop();
 	}
+	
 	private void parseStatement(){
 		if(debug) System.out.println("PARSER: parseStatement()");
 		int indentation = cstIdentValues.peek();
@@ -299,6 +320,40 @@ public class Parser {
 		cstIdentValues.pop();
 	}
 	
+	private void parseBooleanExpr(){
+		if(debug) System.out.println("PARSER: parseBooleanExpr()");
+		int indentation = cstIdentValues.peek();
+		appendCSTHeader("<BooleanExpr>", indentation);
+		Token t = getNextToken();
+		if(t.getType() != Token.Type.LPAREN){
+			if(debug){
+				System.out.println("PARSER: ERROR: Expected [T_OPENING_PARENTHESIS] Got " + t.toString());
+			}
+			parseError = true;
+			return;
+		}
+		appendCSTHeader("[(]", indentation+1);
+		cstIdentValues.push(indentation+1);
+		parseExpr();
+		if(parseError) return;
+		cstIdentValues.push(indentation+1);
+		parseBoolOp();
+		if(parseError) return;
+		cstIdentValues.push(indentation+1);
+		parseExpr();
+		if(parseError) return;
+		t = getNextToken();
+		if(t.getType() != Token.Type.RPAREN){
+			if(debug){
+				System.out.println("PARSER: ERROR: Expected [T_CLOSING_PARENTHESIS] Got " + t.toString());
+			}
+			parseError = true;
+			return;
+		}
+		appendCSTHeader("[)]", indentation+1);
+		cstIdentValues.pop();
+	}
+	
 	private void parseId(){
 		if(debug) System.out.println("PARSER: parseId()");
 		int indentation = cstIdentValues.peek();
@@ -314,7 +369,6 @@ public class Parser {
 		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
 		cstIdentValues.pop();
 	}
-	
 	
 	private void parseCharList(){
 		if(debug) System.out.println("PARSER: parseCharList()");
@@ -433,16 +487,23 @@ public class Parser {
 		cstIdentValues.pop();
 	}
 	
+	/**
+	 * Get the generated CST (concrete syntax tree) generated during
+	 * the parsing process.
+	 * 
+	 * @return the string of the generated CST
+	 */
 	public String getCST(){
 		return cst;
 	}
 	
+	/**
+	 * Check to see whether there was parse error.
+	 * 
+	 * @return true if there is no parse error, otherwise false
+	 */
 	public boolean isParseOk(){
 		return !parseError;
 	}
 }
 
-		
-		
-
-	
