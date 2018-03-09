@@ -283,4 +283,19 @@ public class Parser {
 			parseError = true;
 			return;
 		}
+		appendCSTHeader("[\"]", indentation+1);
+		cstIdentValues.push(indentation+1);
+		parseCharList();
+		if(parseError) return;
+		t = getNextToken();
+		if(t.getType() != Token.Type.QUOTE){
+			if(debug){
+				System.out.println("PARSER: ERROR: Expected [T_QUOTE] Got " + t.toString());
+			}
+			parseError = true;
+			return;
+		}
+		appendCSTHeader("[\"]", indentation+1);
+		cstIdentValues.pop();
+	}
 
