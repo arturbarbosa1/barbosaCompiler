@@ -435,5 +435,8 @@ public class Parser {
 	
 	public String getCST(){
 		return cst;
+	}
+		
+		
 
 	
