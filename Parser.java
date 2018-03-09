@@ -276,4 +276,11 @@ public class Parser {
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<StringExpr>", indentation);
 		Token t = getNextToken();
+		if(t.getType() != Token.Type.QUOTE){
+			if(debug){
+				System.out.println("PARSER: ERROR: Expected [T_QUOTE] Got " + t.toString());
+			}
+			parseError = true;
+			return;
+		}
 
