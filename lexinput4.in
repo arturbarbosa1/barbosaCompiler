@@ -1,0 +1,4 @@
+{
+string s
+s = "this string is /* in */ visible"
+}$
