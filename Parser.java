@@ -436,6 +436,12 @@ public class Parser {
 	public String getCST(){
 		return cst;
 	}
+	
+	public boolean isParseOk(){
+		return !parseError;
+	}
+}
+
 		
 		
 
