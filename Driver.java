@@ -10,37 +10,64 @@ public class Driver {
 
 	public static void main(String[] args) throws Exception {
 		Scanner input;
+		boolean debug = true;
 		
 		if(args.length > 0){
 			input = new Scanner(new File(args[0]));
 		}else{
 			input = new Scanner(System.in);
 		}
-		// instantiate a Lexer object to read from standard input with debug
-		Lexer lexer = new Lexer(input, true);
+		// instantiate a Lexer object to read from standard input with debug enabled
+		Lexer lexer = new Lexer(input, debug);
 		
-		System.out.println("Beginning Lexing Session...*Strings Treated As CharList*\n");
+		if(debug){
+			System.out.println("DEBUG: Running in verbose mode");
+		}
 		
 		// read all tokens from the input 
-		List<Token> tokens = lexer.readTokens();
+		List<Token> tokens = lexer.tokens();
 		
 		int numWarnings = 0;
 		int numErrors = 0;
 		Token lastTok = null;
+		List<Token> nextInputTokens = new ArrayList<Token>();
+		int progNo = 1;
+		boolean nextProg = true;
+		
 		// display tokens to console as lexer debug message
 		for(Token tok : tokens){
-			System.out.println("LEXER --> | " + tok.toString() + "...");
+			if(debug && nextProg){ 
+				System.out.println("\nLEXER: Lexing program " + progNo + "...");
+				nextProg = false;
+			}
+			if(debug) System.out.println("LEXER --> | " + tok.toString() + "...");
 			if(tok.getType() == Token.Type.ERROR) numErrors++;
 			lastTok = tok;
-		}
-		if(lastTok.getType() != Token.Type.EOP)numWarnings++;
-		
-		// display number of warnings and errors
-		if(numErrors > 0){
-			System.out.printf("\nLex Failed With %d WARNINGS(S) and %d ERROR(S)...\n", numWarnings, numErrors);
-		}
-		else{
-			System.out.printf("\nLex Completed With %d WARNINGS(S) and %d ERROR(S)...\n", numWarnings, numErrors);
+			nextInputTokens.add(tok);
+			if(tok.getType() == Token.Type.EOP){
+				if(numErrors == 0){
+					if(debug)System.out.println("LEXER: Lex completed successfully\n");
+					Parser parser = new Parser(nextInputTokens, debug);
+					parser.parse();
+					if(parser.isParseOk()){
+						System.out.println("PARSER: Parse completed successfully");
+						System.out.println("\nCST for program " + progNo+"...");
+						System.out.println(parser.getCST());
+					}else {
+						System.out.println("PARSER: Parse failed");
+						System.out.println("\nCST for program " + progNo+": Skipped due to PARSER error(s)");
+					}
+				}
+				else{
+					System.out.println("\nPARSER: Skipped due to LEXER error(s)");
+					System.out.println("\nCST for program " + progNo+": Skipped due to LEXER error(s)");
+				}
+				numErrors = 0;
+				numWarnings = 0;
+				progNo++;
+				nextInputTokens = new ArrayList<Token>();
+				nextProg = true;
+			}
 		}
 	}
 
