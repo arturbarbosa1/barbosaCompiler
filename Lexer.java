@@ -32,8 +32,15 @@ public class Lexer {
 	 */
 	public Lexer(Scanner input, boolean debug){
 		this.debug = debug;
-		this.input = input;
+		//this.input = input;
+		while(input.hasNextLine()) {
+			if(programInput.length() == 0)
+				programInput += input.nextLine();
+			else
+				programInput += "\n" + input.nextLine();
+		}
 	}
+	
 	
 	/**
 	 * Read the input and return all the tokens in a list.
