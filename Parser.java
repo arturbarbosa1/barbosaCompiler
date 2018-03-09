@@ -332,7 +332,7 @@ public class Parser {
 		cstIdentValues.pop();
 	}
 	
-		private void parseType(){
+	private void parseType(){
 		if(debug) System.out.println("PARSER: parseType()");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<Type>", indentation);
@@ -340,6 +340,22 @@ public class Parser {
 		if(t.getType() != Token.Type.TYPE){
 			if(debug){
 				System.out.println("PARSER: ERROR: Expected [T_TYPE] Got " + t.toString());
+			}
+			parseError = true;
+			return;
+		}
+		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
+		cstIdentValues.pop();
+	}
+	
+	private void parseChar(){
+		if(debug) System.out.println("PARSER: parseChar()");
+		int indentation = cstIdentValues.peek();
+		appendCSTHeader("<Char>", indentation);
+		Token t = getNextToken();
+		if(t.getType() != Token.Type.CHAR){
+			if(debug){
+				System.out.println("PARSER: ERROR: Expected [T_CHAR] Got " + t.toString());
 			}
 			parseError = true;
 			return;
