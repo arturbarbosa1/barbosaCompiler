@@ -315,3 +315,21 @@ public class Parser {
 		cstIdentValues.pop();
 	}
 	
+	
+	private void parseCharList(){
+		if(debug) System.out.println("PARSER: parseCharList()");
+		int indentation = cstIdentValues.peek();
+		appendCSTHeader("<CharList>", indentation);
+		Token t = peekNextToken();
+		if(t.getType() == Token.Type.CHAR){
+			cstIdentValues.push(indentation+1);
+			parseChar();
+			if(parseError) return;
+			cstIdentValues.push(indentation+1);
+			parseCharList();
+			if(parseError) return;
+		}
+		cstIdentValues.pop();
+	}
+
+	
