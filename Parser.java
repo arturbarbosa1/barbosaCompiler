@@ -380,6 +380,22 @@ public class Parser {
 		cstIdentValues.pop();
 	}
 	
+	private void parseDigit(){
+		if(debug) System.out.println("PARSER: parseDigit()");
+		int indentation = cstIdentValues.peek();
+		appendCSTHeader("<Digit>", indentation);
+		Token t = getNextToken();
+		if(t.getType() != Token.Type.DIGIT){
+			if(debug){
+				System.out.println("PARSER: ERROR: Expected [T_DIGIT] Got " + t.toString());
+			}
+			parseError = true;
+			return;
+		}
+		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
+		cstIdentValues.pop();
+	}
+	
 	
 
 	
