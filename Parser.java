@@ -433,5 +433,7 @@ public class Parser {
 		cstIdentValues.pop();
 	}
 	
+	public String getCST(){
+		return cst;
 
 	
