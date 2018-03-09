@@ -417,6 +417,21 @@ public class Parser {
 		cstIdentValues.pop();
 	}
 	
+	private void parseIntOp(){
+		if(debug) System.out.println("PARSER: parseIntOp()");
+		int indentation = cstIdentValues.peek();
+		appendCSTHeader("<IntOp>", indentation);
+		Token t = getNextToken();
+		if(t.getType() != Token.Type.PLUS){
+			if(debug){
+				System.out.println("PARSER: ERROR: Expected [T_INT_OP] Got " + t.toString());
+			}
+			parseError = true;
+			return;
+		}
+		appendCSTHeader("[+]", indentation+1);
+		cstIdentValues.pop();
+	}
 	
 
 	
