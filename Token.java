@@ -38,6 +38,15 @@ public class Token {
 	}
 
 	/**
+	 * Get the line number in source program of this token.
+	 * 
+	 * @return the line number of the token
+	 */
+	public int getLineNo(){
+		return lineNo;
+	}
+	
+	/**
 	 * Get the lexeme
 	 * @return the lexeme
 	 */
@@ -81,6 +90,12 @@ public class Token {
 		case PRINT:
 			s += "T_PRINT";
 			break;
+		case BOOL_TRUE:
+			s += "T_BOOLEAN_VALUE";
+			break;
+		case BOOL_FALSE:
+			s += "T_BOOLEAN_VALUE";
+			break;
 		case PLUS:
 			s += "T_INTOP_PLUS";
 			break;
@@ -100,7 +115,13 @@ public class Token {
 			s += "T_CHAR";
 			break;
 		case ID:
-			s += "T_VARIABLE";
+			s += "T_ID";
+			break;
+		case BOOLOP_EQUAL:
+			s += "T_BOOL_EQUAL";
+			break;
+		case BOOLOP_NOT_EQUAL:
+			s += "T_BOOL_NOT_EQUAL";
 			break;
 		case ASSIGN:
 			s += "T_ASSIGNMENT";
