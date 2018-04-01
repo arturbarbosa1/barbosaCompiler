@@ -225,6 +225,22 @@ public class Parser {
 	
 	private void parseAssignmentStatement(){
 		if(debug) System.out.println("PARSER: parseAssignmentStatement()");
+		int indentation = cstIdentValues.peek();
+		appendCSTHeader("<AssignmentStatement>", indentation);
+		cstIdentValues.push(indentation+1);
+		parseId();
+		if(parseError) return;
+		Token t = getNextToken();
+		if(t.getType() != Token.Type.ASSIGN){
+			if(debug){
+				System.out.println("PARSER: ERROR: Expected [T_ASSIGNMENT] Got " + t.toString());
+			}
+			parseError = true;
+			return;
+		}
+		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
+		cstIdentValues.push(indentation+1);
+		parseExpr();
 		
 	}
 	
