@@ -257,6 +257,20 @@ public class Parser {
 	
 	private void parseWhileStatement(){
 		if(debug) System.out.println("PARSER: parseWhileStatement()");
+		int indentation = cstIdentValues.peek();
+		appendCSTHeader("<WhileStatement>", indentation);
+		Token t = getNextToken();
+		if(t.getType() != Token.Type.WHILE){
+			if(debug){
+				System.out.println("PARSER: ERROR: Expected [T_WHILE] Got " + t.toString());
+			}
+			parseError = true;
+			return;
+		}
+		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
+		parseBooleanExpr();
+		if(parseError) return;
+		parseBlock();
 	}
 	
 	private void parseIfStatement(){
