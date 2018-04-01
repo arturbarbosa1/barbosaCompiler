@@ -3,8 +3,8 @@
    * author: Artur Barbosa
    * course: CMPT 435
    * assignment: project 2 Parcer 
-   * due date: 3/6/2018
-   * Version 2
+   * due date: 4/3/2018
+   * Version 3
    * 
    * This file contains the lexer for project 1.
    *
@@ -149,6 +149,14 @@ public class Lexer {
 				else{
 					allTokens.add(new Token(c+"", Token.Type.ERROR, lineNo));
 				}
+			}
+			else if(programInput.startsWith("if", i)){
+				allTokens.add(new Token("if", Token.Type.IF, lineNo));
+				i += 2; continue;
+			}
+			else if(programInput.startsWith("while", i)){
+				allTokens.add(new Token("while", Token.Type.WHILE, lineNo));
+				i += 5; continue;
 			}
 			else if(programInput.startsWith("print", i)){
 				allTokens.add(new Token("print", Token.Type.PRINT, lineNo));
