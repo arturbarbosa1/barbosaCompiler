@@ -306,7 +306,7 @@ public class Parser {
 			parseStringExpr();
 			if(parseError) return;
 		}
-		else if(t.getType() == Token.Type.LPAREN){
+		else if(t.getType() == Token.Type.LPAREN || t.getType() == Token.Type.BOOL_TRUE || t.getType() == Token.Type.BOOL_FALSE){
 			cstIdentValues.push(indentation+1);
 			parseBooleanExpr();
 			if(parseError) return;
