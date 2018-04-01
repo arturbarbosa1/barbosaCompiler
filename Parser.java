@@ -275,6 +275,20 @@ public class Parser {
 	
 	private void parseIfStatement(){
 		if(debug) System.out.println("PARSER: parseIfStatement()");
+		int indentation = cstIdentValues.peek();
+		appendCSTHeader("<IfStatement>", indentation);
+		Token t = getNextToken();
+		if(t.getType() != Token.Type.IF){
+			if(debug){
+				System.out.println("PARSER: ERROR: Expected [T_IF] Got " + t.toString());
+			}
+			parseError = true;
+			return;
+		}
+		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
+		parseBooleanExpr();
+		if(parseError) return;
+		parseBlock();
 	}
 	
 	private void parseExpr(){
