@@ -166,10 +166,12 @@ public class Parser {
 			parsePrintStatement();
 			break;
 		case ID:
-			parseId();
+			//parseId();
+			parseAssignmentStatement();
 			break;
 		case TYPE:
-			parseType();
+			//parseType();
+			parseVarDecl();
 			break;
 		case WHILE:
 			parseWhileStatement();
