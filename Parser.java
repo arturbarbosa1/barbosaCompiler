@@ -374,13 +374,14 @@ public class Parser {
 	}
 	
 	private void parseBooleanExpr(){
-		if(debug) System.out.println("PARSER: parseBooleanExpr()");
+		Token t = peekNextToken();
+		if(debug) System.out.println("PARSER: parseBooleanExpr() " + t.getLineNo());
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<BooleanExpr>", indentation);
-		//Token t = getNextToken();
-		if(t.getType() != Token.Type.LPAREN){
+		//Token t = peekNextToken();
+		if(t.getType() != Token.Type.LPAREN && t.getType() != Token.Type.BOOL_TRUE && t.getType() != Token.Type.BOOL_FALSE){
 			if(debug){
-				System.out.println("PARSER: ERROR: Expected [T_OPENING_PARENTHESIS] Got " + t.toString());
+				System.out.println("PARSER: ERROR: Expected [T_OPENING_PARENTHESIS/T_BOOLEAN_VALUE] Got " + t.toString());
 			}
 			parseError = true;
 			return;
