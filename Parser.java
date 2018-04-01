@@ -377,7 +377,7 @@ public class Parser {
 		if(debug) System.out.println("PARSER: parseBooleanExpr()");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<BooleanExpr>", indentation);
-		Token t = getNextToken();
+		//Token t = getNextToken();
 		if(t.getType() != Token.Type.LPAREN){
 			if(debug){
 				System.out.println("PARSER: ERROR: Expected [T_OPENING_PARENTHESIS] Got " + t.toString());
