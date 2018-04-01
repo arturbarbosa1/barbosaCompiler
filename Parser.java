@@ -386,26 +386,32 @@ public class Parser {
 			parseError = true;
 			return;
 		}
-		appendCSTHeader("[(]", indentation+1);
-		cstIdentValues.push(indentation+1);
-		parseExpr();
-		if(parseError) return;
-		cstIdentValues.push(indentation+1);
-		parseBoolOp();
-		if(parseError) return;
-		cstIdentValues.push(indentation+1);
-		parseExpr();
-		if(parseError) return;
-		t = getNextToken();
-		if(t.getType() != Token.Type.RPAREN){
-			if(debug){
-				System.out.println("PARSER: ERROR: Expected [T_CLOSING_PARENTHESIS] Got " + t.toString());
+		if(t.getType() == Token.Type.LPAREN) {
+			getNextToken();
+			appendCSTHeader("[(]", indentation+1);
+			cstIdentValues.push(indentation+1);
+			parseExpr();
+			if(parseError) return;
+			cstIdentValues.push(indentation+1);
+			parseBoolOp();
+			if(parseError) return;
+			cstIdentValues.push(indentation+1);
+			parseExpr();
+			if(parseError) return;
+			t = getNextToken();
+			if(t.getType() != Token.Type.RPAREN){
+				if(debug){
+					System.out.println("PARSER: ERROR: Expected [T_CLOSING_PARENTHESIS] Got " + t.toString());
+				}
+				parseError = true;
+				return;
 			}
-			parseError = true;
-			return;
+			appendCSTHeader("[)]", indentation+1);
+			cstIdentValues.pop();
+		}else {
+			parseBoolVal();
 		}
-		appendCSTHeader("[)]", indentation+1);
-		cstIdentValues.pop();
+		
 	}
 	
 	private void parseId(){
