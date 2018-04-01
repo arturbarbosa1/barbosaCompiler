@@ -246,6 +246,13 @@ public class Parser {
 	
 	private void parseVarDecl(){
 		if(debug) System.out.println("PARSER: parseVarDecl()");
+		int indentation = cstIdentValues.peek();
+		appendCSTHeader("<Type>", indentation);
+		cstIdentValues.push(indentation+1);
+		parseType();
+		if(parseError) return;
+		parseId();
+		
 	}
 	
 	private void parseWhileStatement(){
