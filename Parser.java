@@ -515,6 +515,21 @@ public class Parser {
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<BooleanVal>", indentation);
 		Token t = getNextToken();
+		if(t.getType() != Token.Type.BOOL_FALSE && t.getType() != Token.Type.BOOL_TRUE){
+			if(debug){
+				System.out.println("PARSER: ERROR: Expected [T_BOOLEAN_VALUE] Got " + t.toString());
+			}
+			parseError = true;
+			return;
+		}
+		if(t.getType() == Token.Type.BOOL_TRUE){
+			appendCSTHeader("[true]", indentation+1);
+		}
+		else{
+			appendCSTHeader("[false]", indentation+1);
+		}
+		cstIdentValues.pop();
+	}
 		
 	
 	private void parseBoolOp(){
