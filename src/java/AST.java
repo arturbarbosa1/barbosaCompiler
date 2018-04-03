@@ -20,7 +20,7 @@ class Block extends Statement{
 	public List<Statement> getStatements() {
 		return statements;
 	}
-	/*@Override
+	@Override
 	void print(int indentation) {
 		for(int i=0; i < indentation; i++)
 			System.out.print("-");
