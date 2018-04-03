@@ -510,6 +510,8 @@ public class Parser {
 		cstIdentValues.pop();
 	}
 	
+	private void parseBoolVal()
+	
 	private void parseBoolOp(){
 		if(debug) System.out.println("PARSER: parseBoolOp()");
 		int indentation = cstIdentValues.peek();
