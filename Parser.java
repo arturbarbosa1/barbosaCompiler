@@ -510,7 +510,12 @@ public class Parser {
 		cstIdentValues.pop();
 	}
 	
-	private void parseBoolVal()
+	private void parseBoolVal(){
+		if(debug) System.out.println("PARSER: parseBoolVal()");
+		int indentation = cstIdentValues.peek();
+		appendCSTHeader("<BooleanVal>", indentation);
+		Token t = getNextToken();
+		
 	
 	private void parseBoolOp(){
 		if(debug) System.out.println("PARSER: parseBoolOp()");
