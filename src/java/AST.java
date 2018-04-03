@@ -20,11 +20,11 @@ class Block extends Statement{
 	public List<Statement> getStatements() {
 		return statements;
 	}
-	@Override
-	//void print(int indentation) {
-		//for(int i=0; i < indentation; i++)
+	/*@Override
+	void print(int indentation) {
+		for(int i=0; i < indentation; i++)
 			System.out.print("-");
-		//System.out.println("< BLOCK >");
+		System.out.println("< BLOCK >");
 		for(Statement stmt : statements)
 			stmt.print(indentation + 1);
 	}	
