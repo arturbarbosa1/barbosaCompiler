@@ -27,3 +27,37 @@ public class SymbolTable {
 		}
 	}
 }
+
+class Entry{
+	String name;
+	Token type;
+	int scope;
+	
+	public Entry(String name, Token type, int scope) {
+		this.name = name;
+		this.type = type;
+		this.scope = scope;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public Token getType() {
+		return type;
+	}
+
+	public int getScope() {
+		return scope;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof Entry))
+			return false;
+		return name.equals(((Entry)obj).name);
+	}
+}
+
+
+
