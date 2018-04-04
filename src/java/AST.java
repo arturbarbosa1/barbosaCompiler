@@ -77,6 +77,22 @@ class AssignmentStatement extends Statement{
 	}	
 }
 
+class VariableDeclaration extends Statement {
+	private Token type;
+	private Token id;
+	public VariableDeclaration(Token type, Token id) {
+		this.type = type;
+		this.id = id;
+	}	
+	public Token getType() {
+		return type;
+	}
+	public Token getId() {
+		return id;
+	}
+
+	
+
 
  
 
