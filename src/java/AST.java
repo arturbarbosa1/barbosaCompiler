@@ -31,4 +31,7 @@ class Block extends Statement{
 	}	
 }
 
+abstract class Statement extends AST{		
+}
+ 
 
