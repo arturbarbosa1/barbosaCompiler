@@ -152,6 +152,25 @@ class IfStatement extends Statement{
 	}	
 }
 
+abstract class Expr extends AST {	
+}
+
+abstract class IntExpr extends Expr {
+}
+
+class Digit extends IntExpr{
+	private Token digit;
+	public Digit(Token digit) {
+		this.digit = digit;
+	}
+	@Override
+	void print(int indentation) {
+		for(int i=0; i < indentation; i++)
+			System.out.print("-");
+		System.out.println("[ " + digit.getLexeme()+" ]");
+	}
+	
+}
 
 
 	
