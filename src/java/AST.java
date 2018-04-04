@@ -33,5 +33,22 @@ class Block extends Statement{
 
 abstract class Statement extends AST{		
 }
+
+class PrintStatement extends Statement{
+	private Expr expr;
+	public PrintStatement(Expr expr) {
+		this.expr = expr;
+	}	
+	public Expr getExpr() {
+		return expr;
+	}
+	@Override
+	void print(int indentation) {
+		for(int i=0; i < indentation; i++)
+			System.out.print("-");
+		System.out.println("< Print Statement >");
+		expr.print(indentation+1);
+	}	
+}
  
 
