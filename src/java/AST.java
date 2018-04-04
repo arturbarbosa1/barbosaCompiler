@@ -105,6 +105,30 @@ class VariableDeclaration extends Statement {
 	}	
 }
 
+class WhileStatement extends Statement{
+	private BooleanExpr boolExpr;
+	private Block block;
+	public WhileStatement(BooleanExpr boolExpr, Block block) {
+		this.block = block;
+		this.boolExpr = boolExpr;
+	}	
+	public BooleanExpr getBoolExpr() {
+		return boolExpr;
+	}
+	public Block getBlock() {
+		return block;
+	}
+
+	@Override
+	void print(int indentation) {
+		for(int i=0; i < indentation; i++)
+			System.out.print("-");
+		System.out.println("< While Statement >");
+		boolExpr.print(indentation+1);
+		block.print(indentation+1);
+	}	
+}
+
 	
 
 
