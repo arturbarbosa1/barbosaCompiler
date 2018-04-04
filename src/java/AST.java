@@ -90,6 +90,20 @@ class VariableDeclaration extends Statement {
 	public Token getId() {
 		return id;
 	}
+	
+	@Override
+	void print(int indentation) {
+		for(int i=0; i < indentation; i++)
+			System.out.print("-");
+		System.out.println("< Variable Declaration >");
+		for(int i=0; i < indentation+1; i++)
+			System.out.print("-");
+		System.out.println("[ " + type.getLexeme()+" ]");
+		for(int i=0; i < indentation+1; i++)
+			System.out.print("-");
+		System.out.println("[ " + id.getLexeme()+" ]");
+	}	
+}
 
 	
 
