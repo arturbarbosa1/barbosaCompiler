@@ -172,6 +172,22 @@ class Digit extends IntExpr{
 	
 }
 
+class StringExpr extends Expr {
+	private String s;
+	public StringExpr(String s) {
+		this.s = s;
+	}	
+	@Override
+	void print(int indentation) {
+		for(int i=0; i < indentation; i++)
+			System.out.print("-");
+		System.out.println("[ "+s+" ]");
+	}	
+}
+
+abstract class BooleanExpr extends Expr {
+}
+
 
 	
 
