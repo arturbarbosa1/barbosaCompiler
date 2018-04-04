@@ -50,5 +50,21 @@ class PrintStatement extends Statement{
 		expr.print(indentation+1);
 	}	
 }
+
+class AssignmentStatement extends Statement{
+	private Token id;
+	private Expr expr;
+	public AssignmentStatement(Token id, Expr expr) {
+		this.expr = expr;
+		this.id = id;
+	}	
+	public Token getId() {
+		return id;
+	}
+	public Expr getExpr() {
+		return expr;
+	}
+
+
  
 
