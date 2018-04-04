@@ -188,6 +188,19 @@ class StringExpr extends Expr {
 abstract class BooleanExpr extends Expr {
 }
 
+class BooleanValue extends BooleanExpr{
+	private Token boolVal;
+	public BooleanValue(Token boolVal) {
+		this.boolVal = boolVal;
+	}
+	@Override
+	void print(int indentation) {
+		for(int i=0; i < indentation; i++)
+			System.out.print("-");
+		System.out.println("[ "+boolVal.getLexeme()+" ]");
+	}	
+}
+
 
 	
 
