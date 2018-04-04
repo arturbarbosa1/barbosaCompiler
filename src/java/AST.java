@@ -64,6 +64,17 @@ class AssignmentStatement extends Statement{
 	public Expr getExpr() {
 		return expr;
 	}
+@Override
+	void print(int indentation) {
+		for(int i=0; i < indentation; i++)
+			System.out.print("-");
+		System.out.println("< Assignment Statement >");
+		for(int i=0; i < indentation+1; i++)
+			System.out.print("-");
+		System.out.println("[ " + id.getLexeme() + " ]");
+		expr.print(indentation+1);
+	}	
+}
 
 
  
