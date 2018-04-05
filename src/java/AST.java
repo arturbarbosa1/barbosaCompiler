@@ -172,6 +172,26 @@ class Digit extends IntExpr{
 	
 }
 
+class AddExpr extends IntExpr{
+	private IntExpr digit;
+	private IntExpr expr;
+	public AddExpr(IntExpr digit, IntExpr expr) {
+		this.digit = digit;
+		this.expr = expr;
+	}	
+	public IntExpr getExpr() {
+		return expr;
+	}
+	@Override
+	void print(int indentation) {
+		digit.print(indentation);
+		for(int i=0; i < indentation; i++)
+			System.out.print("-");
+		System.out.println("[ + ]");
+		expr.print(indentation);
+	}	
+}
+
 class StringExpr extends Expr {
 	private String s;
 	public StringExpr(String s) {
