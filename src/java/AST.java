@@ -1,14 +1,33 @@
+
+/**
+   * file: AST.java
+   * author: Artur Barbosa
+   * course: CMPT 432
+   * assignment: project 3  
+   * due date: 4/3/2018
+   * Version:3
+   * 
+   * This file contains the AST for project 3.
+   *
+   */
+
 import java.util.ArrayList;
 import java.util.List;
-/*
- * Abstract Syntax Tree produced by parser
- */
 
-//Display AST with given idenatation to console @param identation
+/**
+ * Abstract Syntax Tree produced by parsing <Program>
+ */
 abstract public class AST {	
+	/*
+	 * Display the AST with given indentation to console
+	 * @param indentation
+	 */
 	abstract void print(int indentation);
 }
 
+/**
+ * Abstract Syntax Tree for parsing <Block>
+ */
 class Block extends Statement{		
 	private List<Statement> statements;
 	
@@ -31,9 +50,15 @@ class Block extends Statement{
 	}	
 }
 
+/**
+ * Abstract Syntax Tree for parsing <Statement>
+ */
 abstract class Statement extends AST{		
 }
-
+ 
+/**
+ * Abstract Syntax Tree for parsing <PrintStatement>
+ */
 class PrintStatement extends Statement{
 	private Expr expr;
 	public PrintStatement(Expr expr) {
@@ -51,6 +76,9 @@ class PrintStatement extends Statement{
 	}	
 }
 
+/**
+ * Abstract Syntax Tree for parsing <AssignmentStatement>
+ */
 class AssignmentStatement extends Statement{
 	private Token id;
 	private Expr expr;
@@ -64,7 +92,7 @@ class AssignmentStatement extends Statement{
 	public Expr getExpr() {
 		return expr;
 	}
-	
+
 	@Override
 	void print(int indentation) {
 		for(int i=0; i < indentation; i++)
@@ -77,6 +105,9 @@ class AssignmentStatement extends Statement{
 	}	
 }
 
+/**
+ * Abstract Syntax Tree for parsing <VariableDeclaration>
+ */
 class VariableDeclaration extends Statement {
 	private Token type;
 	private Token id;
@@ -90,7 +121,7 @@ class VariableDeclaration extends Statement {
 	public Token getId() {
 		return id;
 	}
-	
+
 	@Override
 	void print(int indentation) {
 		for(int i=0; i < indentation; i++)
@@ -105,6 +136,9 @@ class VariableDeclaration extends Statement {
 	}	
 }
 
+/**
+ * Abstract Syntax Tree for parsing <WhileStatement>
+ */
 class WhileStatement extends Statement{
 	private BooleanExpr boolExpr;
 	private Block block;
@@ -129,6 +163,9 @@ class WhileStatement extends Statement{
 	}	
 }
 
+/**
+ * Abstract Syntax Tree for parsing <IfStatement>
+ */
 class IfStatement extends Statement{
 	private BooleanExpr boolExpr;
 	private Block block;
@@ -152,12 +189,21 @@ class IfStatement extends Statement{
 	}	
 }
 
+/**
+ * Abstract Syntax Tree for parsing <Expr>
+ */
 abstract class Expr extends AST {	
 }
 
+/**
+ * Abstract Syntax Tree for parsing <IntExpr>
+ */
 abstract class IntExpr extends Expr {
 }
 
+/**
+ * Abstract Syntax Tree for parsing <Digit>
+ */
 class Digit extends IntExpr{
 	private Token digit;
 	public Digit(Token digit) {
@@ -172,6 +218,9 @@ class Digit extends IntExpr{
 	
 }
 
+/**
+ * Abstract Syntax Tree for parsing <Digit> + <IntExpr>
+ */
 class AddExpr extends IntExpr{
 	private IntExpr digit;
 	private IntExpr expr;
@@ -192,6 +241,9 @@ class AddExpr extends IntExpr{
 	}	
 }
 
+/**
+ * Abstract Syntax Tree for parsing <StringExpr>
+ */
 class StringExpr extends Expr {
 	private String s;
 	public StringExpr(String s) {
@@ -205,9 +257,15 @@ class StringExpr extends Expr {
 	}	
 }
 
+/**
+ * Abstract Syntax Tree for parsing <BooleanExpr>
+ */
 abstract class BooleanExpr extends Expr {
 }
 
+/**
+ * Abstract Syntax Tree for parsing <BooleanValue> [ true/false ]
+ */
 class BooleanValue extends BooleanExpr{
 	private Token boolVal;
 	public BooleanValue(Token boolVal) {
@@ -221,6 +279,9 @@ class BooleanValue extends BooleanExpr{
 	}	
 }
 
+/**
+ * Abstract Syntax Tree for parsing <Expr> boolop <Expr>
+ */
 class BooleanOp extends BooleanExpr{
 	private BooleanExpr expr1;
 	private BooleanExpr expr2;
@@ -247,6 +308,9 @@ class BooleanOp extends BooleanExpr{
 	}	
 }
 
+/**
+ * Abstract Syntax Tree for parsing <Id>
+ */
 class Id extends Expr {
 	private Token id;
 	public Id(Token id) {
@@ -263,8 +327,6 @@ class Id extends Expr {
 		System.out.println("[ " + id.getLexeme() + " ]");
 	}
 }
-	
 
 
- 
 
