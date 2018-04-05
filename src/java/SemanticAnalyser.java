@@ -123,3 +123,8 @@ public class SemanticAnalyser {
 			validateBooleanExpr(expr2);
 		}
 	}
+	
+	public void validateAddExpr(AddExpr expr) {
+		IntExpr expr2 = expr.getExpr();
+		validateExpr(expr2);
+	}
