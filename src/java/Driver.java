@@ -49,10 +49,10 @@ public class Driver {
 		// display tokens to console as lexer debug message
 		for(Token tok : tokens){
 			if(debug && nextProg){ 
-				System.out.println("\nLEXER: Lexing program " + progNo + "...");
+				System.out.println("\nProgram " + progNo + " Lexical Analysis");
 				nextProg = false;
 			}
-			if(debug) System.out.println("LEXER --> | " + tok.toString() + "...");
+			//if(debug) System.out.println("LEXER --> | " + tok.toString() + "...");
 			if(tok.getType() == Token.Type.ERROR) numErrors++;
 			lastTok = tok;
 			nextInputTokens.add(tok);
