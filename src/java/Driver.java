@@ -58,7 +58,7 @@ public class Driver {
 			nextInputTokens.add(tok);
 			if(tok.getType() == Token.Type.EOP){
 				if(numErrors == 0){
-					if(debug)System.out.println("LEXER: Lex completed successfully\n");
+					if(debug)System.out.println("Program " + progNo + " Lexical Analysis produced " + numErrors + " error(s) and " + numWarnings + " warning(s)");
 					Parser parser = new Parser(nextInputTokens, debug);
 					parser.parse();
 					if(parser.isParseOk()){
