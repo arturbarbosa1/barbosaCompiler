@@ -137,3 +137,12 @@ public class SemanticAnalyser {
 			numErrors++;
 		}
 	}
+	
+	public int getNumErrors() {
+		return numErrors;
+	}
+
+	
+	public List<Entry> getEntries() {
+		return entries;
+	}
