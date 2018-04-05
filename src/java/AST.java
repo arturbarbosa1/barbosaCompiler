@@ -311,7 +311,7 @@ class BooleanOp extends BooleanExpr{
 /**
  * Abstract Syntax Tree for parsing <Id>
  */
-class Id extends Expr {
+class Id extends IntExpr {
 	private Token id;
 	public Id(Token id) {
 		this.id = id;
