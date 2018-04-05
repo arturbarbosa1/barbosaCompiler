@@ -16,3 +16,9 @@ public class SemanticAnalyser {
 	Stack<Integer> scopeStack = new Stack<Integer>();
 	Stack<SymbolTable> stackSymTable = new Stack<SymbolTable>();
 	List<Entry> entries = new ArrayList<Entry>();
+	
+	public SemanticAnalyser(AST ast) {
+		this.ast = ast;
+		numErrors = 0;
+		stackSymTable.push(currSymTable);
+	}
