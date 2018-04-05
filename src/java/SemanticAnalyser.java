@@ -128,3 +128,12 @@ public class SemanticAnalyser {
 		IntExpr expr2 = expr.getExpr();
 		validateExpr(expr2);
 	}
+	
+	public void validateId(Id id) {
+		currSymTable = stackSymTable.peek();
+		String idName = id.getToken().getLexeme();
+		if(!currSymTable.contains(idName) && !isIdDeclaredInOuterScope(idName)) {
+			System.out.println("Error: The id " + idName + " on line " + id.getToken().getLineNo() + " was used before being declared");
+			numErrors++;
+		}
+	}
