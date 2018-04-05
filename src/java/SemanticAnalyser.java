@@ -78,3 +78,14 @@ public class SemanticAnalyser {
 		Block block = stmt.getBlock();
 		validateBlock(block);
 	}
+	
+	public void validateAssignmentStatement(AssignmentStatement stmt) {
+		currSymTable = stackSymTable.peek();
+		String idName = stmt.getId().getLexeme();
+		if(!currSymTable.contains(idName) && !isIdDeclaredInOuterScope(idName)) {
+			System.out.println("Error: The id " + idName + " on line " + stmt.getId().getLineNo() + " was used before being declared");
+			numErrors++;
+		}
+		Expr expr = stmt.getExpr();
+		validateExpr(expr);
+	}
