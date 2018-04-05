@@ -9,6 +9,7 @@
    * This file contains the parcer for project 3.
    *
    */
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
