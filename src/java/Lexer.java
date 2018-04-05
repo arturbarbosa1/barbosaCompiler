@@ -117,7 +117,7 @@ public class Lexer {
 			else if(c == ')') allTokens.add(new Token(c+"", Token.Type.RPAREN, lineNo));
 			else if(c == '{') allTokens.add(new Token(c+"", Token.Type.LBRACE, lineNo)) ;
 			else if(c == '}') allTokens.add(new Token(c+"", Token.Type.RBRACE, lineNo));
-			else if(c == '$') allTokens.add(new Token(c+"", Token.Type.EOP, lineNo));
+			else if(c == '$') { allTokens.add(new Token(c+"", Token.Type.EOP, lineNo)); lineNo = 1;} 
 			else if(c == '+') allTokens.add(new Token(c+"", Token.Type.PLUS, lineNo));					
 			else if(c == '='){
 				if(i < programInput.length()-1){
@@ -156,7 +156,7 @@ public class Lexer {
 			}
 			else if(programInput.startsWith("while", i)){
 				allTokens.add(new Token("while", Token.Type.WHILE, lineNo));
-				i += 5; continue;
+				i += 5; continue; 
 			}
 			else if(programInput.startsWith("print", i)){
 				allTokens.add(new Token("print", Token.Type.PRINT, lineNo));
