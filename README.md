@@ -5,6 +5,8 @@ Grammar for Compiler
 ----------------------
 http://labouseur.com/courses/compilers/grammar.pdf
 
+----------
+Install Java JDK 
 --------------
 Command Line 
 --------------
