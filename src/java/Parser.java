@@ -78,13 +78,14 @@ public class Parser {
 	/**
 	 * Parse to validate the list of Token lexed by Lexer
 	 */
-	public void parse(){
+	public AST parse(){
 		if(debug){
-			System.out.println("PARSER: Parsing program " + progNum + "...");
+			System.out.println("Program " + progNum + " Parsing");
 			System.out.println("PARSER: parse()");
 		}		
-		parseProgram();
+		AST ast = parseProgram();
 		progNum++;
+		return ast;
 	}
 	
 	private void parseProgram(){
