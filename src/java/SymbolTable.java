@@ -13,22 +13,40 @@
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class implements the symbol table for performing semantic analysis
+ * of input program written as per given grammar.
+ */
 public class SymbolTable {
 
+	/** hash table to store all symbol table entries keyed with symbol name */
 	private Map<String, Entry> symbols;
 	
 	public SymbolTable() {
 		symbols = new HashMap<String, Entry>();
 	}
 	
+	/**
+	 * Add a new entry to the hash table.
+	 * 
+	 * @param entry an Entry object
+	 */
 	public void addEntry(Entry entry) {
 		symbols.put(entry.name, entry);
 	}
 	
+	/**
+	 * Check whether hash table contains an entry with given name
+	 * @param entryName name of the entry
+	 * @return true if hash table contains an entry with name, else return false
+	 */
 	public boolean contains(String entryName) {
 		return symbols.containsKey(entryName);
 	}
-	//table
+	
+	/**
+	 * Display the symbol table to console screen
+	 */
 	public void print() {
 		System.out.println("--------------------------");
 		System.out.println("Name Type      Scope  Line");
@@ -40,6 +58,11 @@ public class SymbolTable {
 	}
 }
 
+/**
+ * This class represents an entry in the symbol table and store 
+ * information of an id with its name, scope and type.
+ *
+ */
 class Entry{
 	String name;
 	Token type;
@@ -70,6 +93,3 @@ class Entry{
 		return name.equals(((Entry)obj).name);
 	}
 }
-
-
-
