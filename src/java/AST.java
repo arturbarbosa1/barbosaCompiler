@@ -201,6 +201,32 @@ class BooleanValue extends BooleanExpr{
 	}	
 }
 
+class BooleanOp extends BooleanExpr{
+	private BooleanExpr expr1;
+	private BooleanExpr expr2;
+	private Token boolOp;
+	public BooleanOp(BooleanExpr expr1, BooleanExpr expr2, Token boolOp) {
+		this.expr1 = expr1;
+		this.expr2 = expr2;
+		this.boolOp = boolOp;
+	}	
+	public BooleanExpr getExpr1() {
+		return expr1;
+	}
+	public BooleanExpr getExpr2() {
+		return expr2;
+	}
+	@Override
+	void print(int indentation) {
+		expr1.print(indentation);
+		for(int i=0; i < indentation; i++)
+			System.out.print("-");
+		
+		System.out.println("[ "+boolOp.getLexeme()+" ]");
+		expr2.print(indentation);
+	}	
+}
+
 
 	
 
