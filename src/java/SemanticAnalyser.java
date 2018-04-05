@@ -60,3 +60,7 @@ public class SemanticAnalyser {
 		}
 	}
 	
+	public void validatePrintStatement(PrintStatement stmt) {
+		Expr expr = stmt.getExpr();
+		validateExpr(expr);
+	}
