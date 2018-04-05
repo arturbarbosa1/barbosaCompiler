@@ -61,10 +61,36 @@ public class Driver {
 					if(debug)System.out.println("Program " + progNo + " Lexical Analysis produced " + numErrors + " error(s) and " + numWarnings + " warning(s)");
 					Parser parser = new Parser(nextInputTokens, false);
 					System.out.println("\nProgram " + progNo + " Parsing");
+					AST ast = parser.parse();
 					if(parser.isParseOk()){
-						System.out.println("PARSER: Parse completed successfully");
-						System.out.println("\nCST for program " + progNo+"...");
+						System.out.println("Program " + progNo + " Parsing produced " + numErrors + " error(s) and " + numWarnings + " warning(s)");
+						
+						System.out.println("\nProgram " + progNo + " Semantic Analysis");
+						SemanticAnalyser semanticAnalyser = new SemanticAnalyser(ast);
+						boolean semanticOk = semanticAnalyser.validate();
+						System.out.println("Program " + progNo + " Semantic Analysis produced " + semanticAnalyser.getNumErrors() + " error(s) and " + numWarnings + " warning(s)");
+						
+						System.out.println("\nProgram " + progNo+" Concerete Syntax Tree");
+						System.out.println("-------------------------------------------");
 						System.out.println(parser.getCST());
+						
+						System.out.println("\nProgram " + progNo+" Abstract Syntax Tree");
+						System.out.println("-------------------------------------------");
+						ast.print(0);
+						
+						System.out.println("\nProgram " + progNo + " Symbol Table");
+						if(semanticOk) {
+							List<Entry> entries = semanticAnalyser.getEntries();
+							System.out.println("--------------------------");
+							System.out.println("Name Type      Scope  Line");
+							System.out.println("--------------------------");
+							for(Entry e : entries) {
+								System.out.println(e.name+"    " + e.getType().getLexeme()+"\t" + e.getScope() + "\t" + e.getType().getLineNo());
+							}
+						} else {
+							System.out.println("not produced due to error(s) produced by semantic analysis");
+						}
+						
 					}else {
 						System.out.println("PARSER: Parse failed");
 						System.out.println("\nCST for program " + progNo+": Skipped due to PARSER error(s)");
