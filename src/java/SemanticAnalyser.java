@@ -71,3 +71,10 @@ public class SemanticAnalyser {
 		Block block = stmt.getBlock();
 		validateBlock(block);
 	}
+	
+	public void validateIfStatement(IfStatement stmt) {
+		BooleanExpr expr = stmt.getBoolExpr();
+		validateExpr(expr);
+		Block block = stmt.getBlock();
+		validateBlock(block);
+	}
