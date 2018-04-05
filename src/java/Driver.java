@@ -20,9 +20,10 @@ import java.util.Scanner;
  */
 public class Driver {
 
+	static final boolean debug = true;
+	
 	public static void main(String[] args) throws Exception {
 		Scanner input;
-		boolean debug = true;
 		
 		if(args.length > 0){
 			input = new Scanner(new File(args[0]));
@@ -52,14 +53,15 @@ public class Driver {
 				System.out.println("\nProgram " + progNo + " Lexical Analysis");
 				nextProg = false;
 			}
-			//if(debug) System.out.println("LEXER --> | " + tok.toString() + "...");
+			if(debug)
+				System.out.println("LEXER --> | " + tok.toString() + "...");
 			if(tok.getType() == Token.Type.ERROR) numErrors++;
 			lastTok = tok;
 			nextInputTokens.add(tok);
 			if(tok.getType() == Token.Type.EOP){
 				if(numErrors == 0){
 					if(debug)System.out.println("Program " + progNo + " Lexical Analysis produced " + numErrors + " error(s) and " + numWarnings + " warning(s)");
-					Parser parser = new Parser(nextInputTokens, false);
+					Parser parser = new Parser(nextInputTokens, debug);
 					System.out.println("\nProgram " + progNo + " Parsing");
 					AST ast = parser.parse();
 					if(parser.isParseOk()){
