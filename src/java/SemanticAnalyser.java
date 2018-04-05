@@ -42,3 +42,5 @@ public class SemanticAnalyser {
 			validateAssignmentStatement((AssignmentStatement)stmt);
 		else if(stmt instanceof Block)
 			validateBlock((Block)stmt);
+		
+	}
