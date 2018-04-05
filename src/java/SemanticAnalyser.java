@@ -22,3 +22,9 @@ public class SemanticAnalyser {
 		numErrors = 0;
 		stackSymTable.push(currSymTable);
 	}
+
+	public boolean validate() {		
+		Block block = (Block)ast;
+		validateBlock(block);
+		return (numErrors == 0);
+	}
