@@ -1,12 +1,12 @@
  /**
    * file: Parser.java
    * author: Artur Barbosa
-   * course: CMPT 435
-   * assignment: project 2 parser 
-   * due date: 3/6/2018
+   * course: CMPT 432
+   * assignment: project 3 parser 
+   * due date: 4/3/2018
    * 
    * 
-   * This file contains the parcer for project 2.
+   * This file contains the parcer for project 3.
    *
    */
 import java.util.List;
