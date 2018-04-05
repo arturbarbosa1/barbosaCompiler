@@ -105,3 +105,21 @@ public class SemanticAnalyser {
 		stackSymTable.pop();
 		scopeStack.pop();
 	}
+	
+	public void validateExpr(Expr expr) {
+		if(expr instanceof AddExpr)
+			validateAddExpr((AddExpr)expr);
+		else if(expr instanceof Id)
+			validateId((Id)expr);
+		else if(expr instanceof BooleanExpr)
+			validateBooleanExpr((BooleanExpr)expr);
+	}
+	
+	public void validateBooleanExpr(BooleanExpr expr) {
+		if(expr instanceof BooleanOp) {
+			BooleanExpr expr1 =  ((BooleanOp)expr).getExpr1();
+			BooleanExpr expr2 =  ((BooleanOp)expr).getExpr2();
+			validateBooleanExpr(expr1);
+			validateBooleanExpr(expr2);
+		}
+	}
