@@ -74,7 +74,7 @@ public class Parser {
 	private void appendCSTHeader(String header, int indentation) {		
 		for(int i=0; i < indentation; i++) cst += "-";
 		cst += header + "\n";
-	}
+	} 
 	
 	/**
 	 * Parse to validate the list of Token lexed by Lexer
@@ -89,28 +89,29 @@ public class Parser {
 		return ast;
 	}
 	
-	private void parseProgram(){
+	private AST parseProgram(){
 		if(debug) System.out.println("PARSER: parseProgram()");
 		cst += "<Program>\n";
 		cstIdentValues.push(1);
-		parseBlock();
-		if(parseError) return;
+		AST ast = parseBlock();
+		if(parseError) return null;
 		Token t = getNextToken();
 		if(t == null){
 			warning = true;
-			return;
+			return null;
 		}
 		if(t.getType() != Token.Type.EOP){
 			if(debug){
 				System.out.println("PARSER: ERROR: Expected [EOP] Got " + t.toString());
 			}
 			parseError = true;
-			return;
+			return null;
 		}
 		cst += "-[$]";
+		return ast;
 	}
 	
-	private void parseBlock(){
+	private Block parseBlock(){
 		if(debug) System.out.println("PARSER: parseBlock()");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<Block>", indentation);
@@ -120,26 +121,31 @@ public class Parser {
 				System.out.println("PARSER: ERROR: Expected [T_OPENING_BRACE] Got " + t.toString());
 			}
 			parseError = true;
-			return;
+			return null;
 		}
 		appendCSTHeader("[{]", indentation+1);
 		
 		cstIdentValues.push(indentation+1);
-		parseStatementList();
-		if(parseError) return;
+		List<Statement> statements = parseStatementList();
+		if(parseError) return null;
 		t = getNextToken();
 		if(t.getType() != Token.Type.RBRACE){
 			if(debug){
 				System.out.println("PARSER: ERROR: Expected [T_CLOSING_BRACE] Got " + t.toString());
 			}
 			parseError = true;
-			return;
+			return null;
 		}
 		appendCSTHeader("[}]", indentation+1);
 		cstIdentValues.pop();
+		Block block = new Block();
+		for(Statement stmt : statements)
+			block.addStatement(stmt);
+		return block;
 	}
 	
-	private void parseStatementList(){
+	private List<Statement> parseStatementList(){
+		List<Statement> statements = new ArrayList<Statement>();
 		if(debug) System.out.println("PARSER: parseStatementList()");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<Statemment List>", indentation);
@@ -149,46 +155,50 @@ public class Parser {
 				|| t.getType() == Token.Type.TYPE || t.getType() == Token.Type.WHILE
 				|| t.getType() == Token.Type.IF || t.getType() == Token.Type.LBRACE){
 			cstIdentValues.push(indentation+1);
-			parseStatement();
-			if(parseError) return;
+			Statement stmt = parseStatement();
+			if(parseError) return null;
+			if(stmt == null) return null;
+			statements.add(stmt);
 			t = peekNextToken();
 		}		
 		cstIdentValues.pop();
+		return statements;
 	}
 	
-	private void parseStatement(){
+	private Statement parseStatement(){
 		if(debug) System.out.println("PARSER: parseStatement()");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<Statement>", indentation);
 		Token t = peekNextToken();
 		cstIdentValues.push(indentation+1);
-		
+		Statement stmt = null;
 		switch(t.getType()){
 		case PRINT:
-			parsePrintStatement();
+			stmt = parsePrintStatement();
 			break;
 		case ID:
 			//parseId();
-			parseAssignmentStatement();
+			stmt = parseAssignmentStatement();
 			break;
 		case TYPE:
 			//parseType();
-			parseVarDecl();
+			stmt = parseVarDecl();
 			break;
 		case WHILE:
-			parseWhileStatement();
+			stmt = parseWhileStatement();
 			break;
 		case IF:
-			parseIfStatement();
+			stmt = parseIfStatement();
 			break;
 		case LBRACE:
-			parseBlock();
+			stmt = parseBlock();
 			break;
 		}
 		cstIdentValues.pop();
+		return stmt;
 	}
 	
-	private void parsePrintStatement(){
+	private Statement parsePrintStatement(){
 		if(debug) System.out.println("PARSER: parsePrintStatement()");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<PrintStatement>", indentation);
@@ -198,7 +208,7 @@ public class Parser {
 				System.out.println("PARSER: ERROR: Expected [T_PRINT] Got " + t.toString());
 			}
 			parseError = true;
-			return;
+			return null;
 		}
 		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
 		t = getNextToken();
@@ -207,57 +217,58 @@ public class Parser {
 				System.out.println("PARSER: ERROR: Expected [T_OPENING_PARENTHESIS] Got " + t.toString());
 			}
 			parseError = true;
-			return;
+			return null;
 		}
 		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
 		cstIdentValues.push(indentation+1);
-		parseExpr();
-		if(parseError) return;
+		Expr expr = parseExpr();
+		if(parseError) return null;
 		t = getNextToken();
 		if(t.getType() != Token.Type.RPAREN){
 			if(debug){
 				System.out.println("PARSER: ERROR: Expected [T_CLOSING_PARENTHESIS] Got " + t.toString());
 			}
 			parseError = true;
-			return;
+			return null;
 		}
 		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
 		cstIdentValues.pop();
+		return new PrintStatement(expr);
 	}
 	
-	private void parseAssignmentStatement(){
+	private Statement parseAssignmentStatement(){
 		if(debug) System.out.println("PARSER: parseAssignmentStatement()");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<AssignmentStatement>", indentation);
 		cstIdentValues.push(indentation+1);
-		parseId();
-		if(parseError) return;
+		Id id = parseId();
+		if(parseError) return null;
 		Token t = getNextToken();
 		if(t.getType() != Token.Type.ASSIGN){
 			if(debug){
 				System.out.println("PARSER: ERROR: Expected [T_ASSIGNMENT] Got " + t.toString());
 			}
 			parseError = true;
-			return;
+			return null;
 		}
 		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
 		cstIdentValues.push(indentation+1);
-		parseExpr();
-		
+		Expr expr = parseExpr();
+		return new AssignmentStatement(id.getToken(), expr);
 	}
 	
-	private void parseVarDecl(){
+	private Statement parseVarDecl(){
 		if(debug) System.out.println("PARSER: parseVarDecl()");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<Type>", indentation);
 		cstIdentValues.push(indentation+1);
-		parseType();
-		if(parseError) return;
-		parseId();
-		
+		Token type = parseType();
+		if(parseError) return null;
+		Id id = parseId();	
+		return new VariableDeclaration(type, id.getToken());
 	}
 	
-	private void parseWhileStatement(){
+	private Statement parseWhileStatement(){
 		if(debug) System.out.println("PARSER: parseWhileStatement()");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<WhileStatement>", indentation);
@@ -267,15 +278,16 @@ public class Parser {
 				System.out.println("PARSER: ERROR: Expected [T_WHILE] Got " + t.toString());
 			}
 			parseError = true;
-			return;
+			return null;
 		}
 		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
-		parseBooleanExpr();
-		if(parseError) return;
-		parseBlock();
+		BooleanExpr boolExpr = parseBooleanExpr();
+		if(parseError) return null;
+		Block block = parseBlock();
+		return new WhileStatement(boolExpr, block);
 	}
 	
-	private void parseIfStatement(){
+	private Statement parseIfStatement(){
 		if(debug) System.out.println("PARSER: parseIfStatement()");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<IfStatement>", indentation);
@@ -285,69 +297,75 @@ public class Parser {
 				System.out.println("PARSER: ERROR: Expected [T_IF] Got " + t.toString());
 			}
 			parseError = true;
-			return;
+			return null;
 		}
 		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
-		parseBooleanExpr();
-		if(parseError) return;
-		parseBlock();
+		BooleanExpr boolExpr = parseBooleanExpr();
+		if(parseError) return null;
+		Block block = parseBlock();
+		return new WhileStatement(boolExpr, block);
 	}
 	
-	private void parseExpr(){
+	private Expr parseExpr(){
 		if(debug) System.out.println("PARSER: parseExpr()");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<Expr>", indentation);
 		Token t = peekNextToken();
+		Expr expr = null;
 		if(t.getType() == Token.Type.DIGIT){
 			cstIdentValues.push(indentation+1);
-			parseIntExpr();
-			if(parseError) return;
+			expr = parseIntExpr();
+			if(parseError) return null;
 		}
 		else if(t.getType() == Token.Type.QUOTE){
 			cstIdentValues.push(indentation+1);
-			parseStringExpr();
-			if(parseError) return;
+			expr = parseStringExpr();
+			if(parseError) return null;
 		}
 		else if(t.getType() == Token.Type.LPAREN || t.getType() == Token.Type.BOOL_TRUE || t.getType() == Token.Type.BOOL_FALSE){
 			cstIdentValues.push(indentation+1);
-			parseBooleanExpr();
-			if(parseError) return;
+			expr = parseBooleanExpr();
+			if(parseError) return null;
 		}
 		else if(t.getType() == Token.Type.ID){
 			cstIdentValues.push(indentation+1);
-			parseId();
-			if(parseError) return;
+			expr = parseId();
+			if(parseError) return null;
 		}
 		else{
 			if(debug){
 				System.out.println("PARSER: ERROR: Expected Expr Got " + t.toString());
 			}
 			parseError = true;
-			return;
+			return null;
 		}
 		cstIdentValues.pop();
+		return expr;
 	}
 	
-	private void parseIntExpr(){
+	private IntExpr parseIntExpr(){
 		if(debug) System.out.println("PARSER: parseIntExpr()");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<IntExpr>", indentation);
 		cstIdentValues.push(indentation+1);
-		parseDigit();
-		if(parseError) return;
+		IntExpr digit = parseDigit();
+		if(parseError) return null;
 		Token t = peekNextToken();
+		IntExpr intExpr = digit;
 		if(t.getType() == Token.Type.PLUS){
 			cstIdentValues.push(indentation+1);
 			parseIntOp();
-			if(parseError) return;
+			if(parseError) return null;
 			cstIdentValues.push(indentation+1);
-			parseExpr();
-			if(parseError) return;
+			IntExpr expr = (IntExpr)parseExpr();
+			if(parseError) return null;
+			intExpr = new AddExpr(digit, expr);
 		}
 		cstIdentValues.pop();
+		return intExpr;
 	}
 	
-	private void parseStringExpr(){
+	private StringExpr parseStringExpr(){
 		if(debug) System.out.println("PARSER: parseStringExpr()");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<StringExpr>", indentation);
@@ -357,66 +375,71 @@ public class Parser {
 				System.out.println("PARSER: ERROR: Expected [T_QUOTE] Got " + t.toString());
 			}
 			parseError = true;
-			return;
+			return null;
 		}
 		appendCSTHeader("[\"]", indentation+1);
 		cstIdentValues.push(indentation+1);
-		parseCharList();
-		if(parseError) return;
+		String str = parseCharList();
+		if(parseError) return null;
 		t = getNextToken();
 		if(t.getType() != Token.Type.QUOTE){
 			if(debug){
 				System.out.println("PARSER: ERROR: Expected [T_QUOTE] Got " + t.toString());
 			}
 			parseError = true;
-			return;
+			return null;
 		}
 		appendCSTHeader("[\"]", indentation+1);
 		cstIdentValues.pop();
+		return new StringExpr(str);
 	}
 	
-	private void parseBooleanExpr(){
+	private BooleanExpr parseBooleanExpr(){
 		Token t = peekNextToken();
 		if(debug) System.out.println("PARSER: parseBooleanExpr() " + t.getLineNo());
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<BooleanExpr>", indentation);
 		//Token t = peekNextToken();
+		BooleanExpr expr1;
+		BooleanExpr expr2;
+		Token boolOp;
 		if(t.getType() != Token.Type.LPAREN && t.getType() != Token.Type.BOOL_TRUE && t.getType() != Token.Type.BOOL_FALSE){
 			if(debug){
 				System.out.println("PARSER: ERROR: Expected [T_OPENING_PARENTHESIS/T_BOOLEAN_VALUE] Got " + t.toString());
 			}
 			parseError = true;
-			return;
+			return null;
 		}
 		if(t.getType() == Token.Type.LPAREN) {
 			getNextToken();
 			appendCSTHeader("[(]", indentation+1);
 			cstIdentValues.push(indentation+1);
-			parseExpr();
-			if(parseError) return;
+			expr1 = (BooleanExpr)parseExpr();
+			if(parseError) return null;
 			cstIdentValues.push(indentation+1);
-			parseBoolOp();
-			if(parseError) return;
+			boolOp = parseBoolOp();
+			if(parseError) return null;
 			cstIdentValues.push(indentation+1);
-			parseExpr();
-			if(parseError) return;
+			expr2 = (BooleanExpr)parseExpr();
+			if(parseError) return null;
 			t = getNextToken();
 			if(t.getType() != Token.Type.RPAREN){
 				if(debug){
 					System.out.println("PARSER: ERROR: Expected [T_CLOSING_PARENTHESIS] Got " + t.toString());
 				}
 				parseError = true;
-				return;
+				return null;
 			}
 			appendCSTHeader("[)]", indentation+1);
 			cstIdentValues.pop();
+			return new BooleanOp(expr1, expr2, boolOp);
 		}else {
-			parseBoolVal();
+			return parseBoolVal();
 		}
 		
 	}
 	
-	private void parseId(){
+	private Id parseId(){
 		if(debug) System.out.println("PARSER: parseId()");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<Id>", indentation);
@@ -426,13 +449,16 @@ public class Parser {
 				System.out.println("PARSER: ERROR: Expected [T_VARIABLE] Got " + t.toString());
 			}
 			parseError = true;
-			return;
+			return null;
 		}
 		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
 		cstIdentValues.pop();
+		return new Id(t);
 	}
 	
-	private void parseCharList(){
+	private String parseCharList(){
+		String str = "";
+		
 		if(debug) System.out.println("PARSER: parseCharList()");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<CharList>", indentation);
@@ -440,15 +466,17 @@ public class Parser {
 		if(t.getType() == Token.Type.CHAR){
 			cstIdentValues.push(indentation+1);
 			parseChar();
-			if(parseError) return;
+			str += t.getLexeme();
+			if(parseError) return null;
 			cstIdentValues.push(indentation+1);
-			parseCharList();
-			if(parseError) return;
+			str += parseCharList();
+			if(parseError) return null;
 		}
 		cstIdentValues.pop();
+		return str;
 	}
 	
-	private void parseType(){
+	private Token parseType(){
 		if(debug) System.out.println("PARSER: parseType()");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<Type>", indentation);
@@ -458,13 +486,14 @@ public class Parser {
 				System.out.println("PARSER: ERROR: Expected [T_TYPE] Got " + t.toString());
 			}
 			parseError = true;
-			return;
+			return null;
 		}
 		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
 		cstIdentValues.pop();
+		return t;
 	}
 	
-	private void parseChar(){
+	private Token parseChar(){
 		if(debug) System.out.println("PARSER: parseChar()");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<Char>", indentation);
@@ -474,10 +503,11 @@ public class Parser {
 				System.out.println("PARSER: ERROR: Expected [T_CHAR] Got " + t.toString());
 			}
 			parseError = true;
-			return;
+			return null;
 		}
 		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
 		cstIdentValues.pop();
+		return t;
 	}
 	
 	private void parseSpace(){
@@ -496,7 +526,7 @@ public class Parser {
 		cstIdentValues.pop();
 	}
 	
-	private void parseDigit(){
+	private IntExpr parseDigit(){
 		if(debug) System.out.println("PARSER: parseDigit()");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<Digit>", indentation);
@@ -506,13 +536,14 @@ public class Parser {
 				System.out.println("PARSER: ERROR: Expected [T_DIGIT] Got " + t.toString());
 			}
 			parseError = true;
-			return;
+			return null;
 		}
 		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
 		cstIdentValues.pop();
+		return new Digit(t);
 	}
 	
-	private void parseBoolVal(){
+	private BooleanExpr parseBoolVal() {
 		if(debug) System.out.println("PARSER: parseBoolVal()");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<BooleanVal>", indentation);
@@ -522,7 +553,7 @@ public class Parser {
 				System.out.println("PARSER: ERROR: Expected [T_BOOLEAN_VALUE] Got " + t.toString());
 			}
 			parseError = true;
-			return;
+			return null;
 		}
 		if(t.getType() == Token.Type.BOOL_TRUE){
 			appendCSTHeader("[true]", indentation+1);
@@ -531,10 +562,10 @@ public class Parser {
 			appendCSTHeader("[false]", indentation+1);
 		}
 		cstIdentValues.pop();
+		return new BooleanValue(t);
 	}
-		
 	
-	private void parseBoolOp(){
+	private Token parseBoolOp(){
 		if(debug) System.out.println("PARSER: parseBoolOp()");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<BooleanOp>", indentation);
@@ -544,7 +575,7 @@ public class Parser {
 				System.out.println("PARSER: ERROR: Expected [T_BOOL_OP] Got " + t.toString());
 			}
 			parseError = true;
-			return;
+			return null;
 		}
 		if(t.getType() == Token.Type.BOOLOP_EQUAL){
 			appendCSTHeader("[==]", indentation+1);
@@ -553,9 +584,10 @@ public class Parser {
 			appendCSTHeader("[!=]", indentation+1);
 		}
 		cstIdentValues.pop();
+		return t;
 	}
 	
-	private void parseIntOp(){
+	private Token parseIntOp(){
 		if(debug) System.out.println("PARSER: parseIntOp()");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<IntOp>", indentation);
@@ -565,10 +597,11 @@ public class Parser {
 				System.out.println("PARSER: ERROR: Expected [T_INT_OP] Got " + t.toString());
 			}
 			parseError = true;
-			return;
+			return null;
 		}
 		appendCSTHeader("[+]", indentation+1);
 		cstIdentValues.pop();
+		return t;
 	}
 	
 	/**
@@ -590,4 +623,6 @@ public class Parser {
 		return !parseError;
 	}
 }
+
+
 
