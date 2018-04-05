@@ -81,7 +81,6 @@ public class Parser {
 	 */
 	public AST parse(){
 		if(debug){
-			System.out.println("Program " + progNum + " Parsing");
 			System.out.println("PARSER: parse()");
 		}		
 		AST ast = parseProgram();
@@ -396,7 +395,7 @@ public class Parser {
 	
 	private BooleanExpr parseBooleanExpr(){
 		Token t = peekNextToken();
-		if(debug) System.out.println("PARSER: parseBooleanExpr() " + t.getLineNo());
+		if(debug) System.out.println("PARSER: parseBooleanExpr() ");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<BooleanExpr>", indentation);
 		//Token t = peekNextToken();
@@ -623,6 +622,7 @@ public class Parser {
 		return !parseError;
 	}
 }
+
 
 
 
