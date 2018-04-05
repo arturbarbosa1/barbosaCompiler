@@ -44,3 +44,19 @@ public class SemanticAnalyser {
 			validateBlock((Block)stmt);
 		
 	}
+	
+	public void validateVarDeclaration(VariableDeclaration stmt) {
+		currSymTable = stackSymTable.peek();
+		String idName = stmt.getId().getLexeme();
+		if(currSymTable.contains(idName)) {
+			System.out.println("Error: duplicate declaration id " + idName + " on line " + stmt.getId().getLineNo());
+			numErrors++;
+		}
+		else {
+			int scope = scopeStack.peek();
+			Entry e = new Entry(idName, stmt.getType(), scope);
+			currSymTable.addEntry(e);
+			entries.add(e);
+		}
+	}
+	
