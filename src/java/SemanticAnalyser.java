@@ -89,3 +89,19 @@ public class SemanticAnalyser {
 		Expr expr = stmt.getExpr();
 		validateExpr(expr);
 	}
+	
+	public void validateBlock(Block block) {
+		stackSymTable.push(new SymbolTable());
+		if(scopeStack.isEmpty())
+			scopeStack.push(0);
+		else
+			scopeStack.push(scopeStack.peek()+1);
+		
+		List<Statement> statements = block.getStatements();
+		
+		for(Statement stmt : statements)
+			validateStatement(stmt);
+		
+		stackSymTable.pop();
+		scopeStack.pop();
+	}
