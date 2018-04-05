@@ -64,3 +64,10 @@ public class SemanticAnalyser {
 		Expr expr = stmt.getExpr();
 		validateExpr(expr);
 	}
+	
+	public void validateWhileStatement(WhileStatement stmt) {
+		BooleanExpr expr = stmt.getBoolExpr();
+		validateExpr(expr);
+		Block block = stmt.getBlock();
+		validateBlock(block);
+	}
