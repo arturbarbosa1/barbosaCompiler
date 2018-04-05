@@ -227,7 +227,22 @@ class BooleanOp extends BooleanExpr{
 	}	
 }
 
-
+class Id extends Expr {
+	private Token id;
+	public Id(Token id) {
+		this.id = id;
+	}	
+	public Token getToken() {
+		return id;
+	}
+	
+	@Override
+	void print(int indentation) {
+		for(int i=0; i < indentation; i++)
+			System.out.print("-");
+		System.out.println("[ " + id.getLexeme() + " ]");
+	}
+}
 	
 
 
