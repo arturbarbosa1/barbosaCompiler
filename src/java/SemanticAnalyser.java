@@ -146,3 +146,14 @@ public class SemanticAnalyser {
 	public List<Entry> getEntries() {
 		return entries;
 	}
+	
+	private boolean isIdDeclaredInOuterScope(String id) {
+		int size = stackSymTable.size();
+		for(int i=0; i < size-1; i++) {
+			SymbolTable symtbl = stackSymTable.get(i);
+			if(symtbl.contains(id))
+				return true;
+		}
+		return false;
+	}
+}
