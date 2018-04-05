@@ -28,3 +28,17 @@ public class SemanticAnalyser {
 		validateBlock(block);
 		return (numErrors == 0);
 	}
+	
+	public void validateStatement(Statement stmt) {
+		if(stmt instanceof VariableDeclaration)
+			validateVarDeclaration((VariableDeclaration)stmt);
+		else if(stmt instanceof PrintStatement)
+			validatePrintStatement((PrintStatement)stmt);
+		else if(stmt instanceof WhileStatement)
+			validateWhileStatement((WhileStatement)stmt);
+		else if(stmt instanceof IfStatement)
+			validateIfStatement((IfStatement)stmt);
+		else if(stmt instanceof AssignmentStatement)
+			validateAssignmentStatement((AssignmentStatement)stmt);
+		else if(stmt instanceof Block)
+			validateBlock((Block)stmt);
