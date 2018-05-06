@@ -14,6 +14,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Abstract Syntax Tree produced by parsing <Program>
  */
@@ -193,6 +194,8 @@ class IfStatement extends Statement{
  * Abstract Syntax Tree for parsing <Expr>
  */
 abstract class Expr extends AST {	
+	
+	abstract String getTypeString();
 }
 
 /**
@@ -209,11 +212,18 @@ class Digit extends IntExpr{
 	public Digit(Token digit) {
 		this.digit = digit;
 	}
+	public Token getToken() {
+		return digit;
+	}
 	@Override
 	void print(int indentation) {
 		for(int i=0; i < indentation; i++)
 			System.out.print("-");
 		System.out.println("[ " + digit.getLexeme()+" ]");
+	}
+	@Override
+	String getTypeString() {
+		return "int";
 	}
 	
 }
@@ -223,13 +233,20 @@ class Digit extends IntExpr{
  */
 class AddExpr extends IntExpr{
 	private IntExpr digit;
-	private IntExpr expr;
-	public AddExpr(IntExpr digit, IntExpr expr) {
+	private Expr expr;
+	public AddExpr(IntExpr digit, Expr expr) {
 		this.digit = digit;
 		this.expr = expr;
 	}	
-	public IntExpr getExpr() {
+	public Expr getExpr() {
 		return expr;
+	}
+	
+	public IntExpr getDigit() {
+		return digit;
+	}
+	public void setDigit(IntExpr digit) {
+		this.digit = digit;
 	}
 	@Override
 	void print(int indentation) {
@@ -238,6 +255,10 @@ class AddExpr extends IntExpr{
 			System.out.print("-");
 		System.out.println("[ + ]");
 		expr.print(indentation);
+	}
+	@Override
+	String getTypeString() {
+		return "int";
 	}	
 }
 
@@ -255,6 +276,11 @@ class StringExpr extends Expr {
 			System.out.print("-");
 		System.out.println("[ "+s+" ]");
 	}	
+	
+	@Override
+	String getTypeString() {
+		return "string";
+	}
 }
 
 /**
@@ -277,24 +303,28 @@ class BooleanValue extends BooleanExpr{
 			System.out.print("-");
 		System.out.println("[ "+boolVal.getLexeme()+" ]");
 	}	
+	@Override
+	String getTypeString() {
+		return "boolean";
+	}
 }
 
 /**
  * Abstract Syntax Tree for parsing <Expr> boolop <Expr>
  */
 class BooleanOp extends BooleanExpr{
-	private BooleanExpr expr1;
-	private BooleanExpr expr2;
+	private Expr expr1;
+	private Expr expr2;
 	private Token boolOp;
-	public BooleanOp(BooleanExpr expr1, BooleanExpr expr2, Token boolOp) {
+	public BooleanOp(Expr expr1, Expr expr2, Token boolOp) {
 		this.expr1 = expr1;
 		this.expr2 = expr2;
 		this.boolOp = boolOp;
 	}	
-	public BooleanExpr getExpr1() {
+	public Expr getExpr1() {
 		return expr1;
 	}
-	public BooleanExpr getExpr2() {
+	public Expr getExpr2() {
 		return expr2;
 	}
 	@Override
@@ -306,6 +336,11 @@ class BooleanOp extends BooleanExpr{
 		System.out.println("[ "+boolOp.getLexeme()+" ]");
 		expr2.print(indentation);
 	}	
+	
+	@Override
+	String getTypeString() {
+		return "boolean";
+	} 
 }
 
 /**
@@ -313,13 +348,27 @@ class BooleanOp extends BooleanExpr{
  */
 class Id extends IntExpr {
 	private Token id;
-	public Id(Token id) {
+	private Token type;
+	public Id(Token id, Token type) {
 		this.id = id;
+		this.type = type;
 	}	
 	public Token getToken() {
 		return id;
-	}
+	}	
 	
+	public void setType(Token type) {
+		this.type = type;
+	}
+	public Token getType() {
+		return type;
+	}
+	public String getTypeString() {
+		if(type != null)
+			return type.getLexeme();
+		else
+			return "";
+	}
 	@Override
 	void print(int indentation) {
 		for(int i=0; i < indentation; i++)
@@ -327,6 +376,5 @@ class Id extends IntExpr {
 		System.out.println("[ " + id.getLexeme() + " ]");
 	}
 }
-
 
 
