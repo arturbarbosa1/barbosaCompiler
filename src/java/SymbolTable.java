@@ -10,7 +10,9 @@
    * This file contains the SymbolTable for project 3.
    *
    */
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,6 +46,21 @@ public class SymbolTable {
 		return symbols.containsKey(entryName);
 	}
 	
+	public Entry getEntry(String name) {
+		if(contains(name))
+			return symbols.get(name);
+		else
+			return null;
+	}
+	
+	public List<Entry> getEntries(){
+		List<Entry> entries = new ArrayList<Entry>();
+		for(String name : symbols.keySet()) {
+			entries.add(symbols.get(name));
+		}
+		return entries;
+	}
+	
 	/**
 	 * Display the symbol table to console screen
 	 */
@@ -67,11 +84,15 @@ class Entry{
 	String name;
 	Token type;
 	int scope;
+	boolean initialised;
+	boolean used;
 	
 	public Entry(String name, Token type, int scope) {
 		this.name = name;
 		this.type = type;
 		this.scope = scope;
+		initialised = false;
+		used = false;
 	}
 
 	public String getName() {
@@ -85,7 +106,24 @@ class Entry{
 	public int getScope() {
 		return scope;
 	}
+		
+	public boolean isInitialised() {
+		return initialised;
+	}
+
+	public void setInitialised(boolean initialised) {
+		this.initialised = initialised;
+	}
+
 	
+	public boolean isUsed() {
+		return used;
+	}
+
+	public void setUsed(boolean used) {
+		this.used = used;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if(!(obj instanceof Entry))
