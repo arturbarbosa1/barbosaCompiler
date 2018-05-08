@@ -70,7 +70,15 @@ public class Driver {
 						System.out.println("\nProgram " + progNo + " Semantic Analysis");
 						SemanticAnalyser semanticAnalyser = new SemanticAnalyser(ast);
 						boolean semanticOk = semanticAnalyser.validate();
-						System.out.println("Program " + progNo + " Semantic Analysis produced " + semanticAnalyser.getNumErrors() + " error(s) and " + numWarnings + " warning(s)");
+						for(Entry e : semanticAnalyser.getEntries()) {
+							if(!e.isInitialised()) {
+								System.out.println("Warning: Variable [ "  + e.getName() + " ] on line " + e.getType().getLineNo() + " has been declared but is not initialized...");
+							}
+							else if(!e.isUsed()) {
+								System.out.println("Warning: Variable [ "  + e.getName() + " ] on line " + e.getType().getLineNo() + " has been initialized but is not used...");
+							}
+						}
+						System.out.println("Program " + progNo + " Semantic Analysis produced " + semanticAnalyser.getNumErrors() + " error(s) and " + semanticAnalyser.getNumWarnings() + " warning(s)");
 						
 						System.out.println("\nProgram " + progNo+" Concerete Syntax Tree");
 						System.out.println("-------------------------------------------");
