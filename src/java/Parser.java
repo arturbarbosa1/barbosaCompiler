@@ -240,7 +240,7 @@ public class Parser {
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<AssignmentStatement>", indentation);
 		cstIdentValues.push(indentation+1);
-		Id id = parseId();
+		Id id = parseId(null);
 		if(parseError) return null;
 		Token t = getNextToken();
 		if(t.getType() != Token.Type.ASSIGN){
@@ -252,7 +252,7 @@ public class Parser {
 		}
 		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
 		cstIdentValues.push(indentation+1);
-		Expr expr = parseExpr();
+		Expr expr = parseExpr();		
 		return new AssignmentStatement(id.getToken(), expr);
 	}
 	
@@ -263,7 +263,7 @@ public class Parser {
 		cstIdentValues.push(indentation+1);
 		Token type = parseType();
 		if(parseError) return null;
-		Id id = parseId();	
+		Id id = parseId(type);	
 		return new VariableDeclaration(type, id.getToken());
 	}
 	
@@ -328,7 +328,7 @@ public class Parser {
 		}
 		else if(t.getType() == Token.Type.ID){
 			cstIdentValues.push(indentation+1);
-			expr = parseId();
+			expr = parseId(null);
 			if(parseError) return null;
 		}
 		else{
@@ -356,7 +356,7 @@ public class Parser {
 			parseIntOp();
 			if(parseError) return null;
 			cstIdentValues.push(indentation+1);
-			IntExpr expr = (IntExpr)parseExpr();
+			Expr expr = parseExpr();
 			if(parseError) return null;
 			intExpr = new AddExpr(digit, expr);
 		}
@@ -399,8 +399,8 @@ public class Parser {
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<BooleanExpr>", indentation);
 		//Token t = peekNextToken();
-		BooleanExpr expr1;
-		BooleanExpr expr2;
+		Expr expr1;
+		Expr expr2;
 		Token boolOp;
 		if(t.getType() != Token.Type.LPAREN && t.getType() != Token.Type.BOOL_TRUE && t.getType() != Token.Type.BOOL_FALSE){
 			if(debug){
@@ -413,13 +413,13 @@ public class Parser {
 			getNextToken();
 			appendCSTHeader("[(]", indentation+1);
 			cstIdentValues.push(indentation+1);
-			expr1 = (BooleanExpr)parseExpr();
+			expr1 = parseExpr();
 			if(parseError) return null;
 			cstIdentValues.push(indentation+1);
 			boolOp = parseBoolOp();
 			if(parseError) return null;
 			cstIdentValues.push(indentation+1);
-			expr2 = (BooleanExpr)parseExpr();
+			expr2 = parseExpr();
 			if(parseError) return null;
 			t = getNextToken();
 			if(t.getType() != Token.Type.RPAREN){
@@ -438,7 +438,7 @@ public class Parser {
 		
 	}
 	
-	private Id parseId(){
+	private Id parseId(Token type){
 		if(debug) System.out.println("PARSER: parseId()");
 		int indentation = cstIdentValues.peek();
 		appendCSTHeader("<Id>", indentation);
@@ -452,7 +452,7 @@ public class Parser {
 		}
 		appendCSTHeader("["+t.getLexeme()+"]", indentation+1);
 		cstIdentValues.pop();
-		return new Id(t);
+		return new Id(t, type);
 	}
 	
 	private String parseCharList(){
@@ -622,7 +622,3 @@ public class Parser {
 		return !parseError;
 	}
 }
-
-
-
-
