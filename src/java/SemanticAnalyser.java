@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Stack;
 
 
+
 /**
  * This class implements the semantic analysis based on abstract syntax tree
  *
@@ -22,6 +23,7 @@ public class SemanticAnalyser {
 
 	private AST ast;
 	private int numErrors;
+	private int numWarnings;
 	SymbolTable globalSymTable = new SymbolTable();
 	SymbolTable currSymTable = new SymbolTable();
 	Stack<Integer> scopeStack = new Stack<Integer>();
@@ -37,6 +39,7 @@ public class SemanticAnalyser {
 	public SemanticAnalyser(AST ast) {
 		this.ast = ast;
 		numErrors = 0;
+		numWarnings = 0;
 		stackSymTable.push(currSymTable);
 	}
 	
@@ -132,13 +135,32 @@ public class SemanticAnalyser {
 	 */
 	public void validateAssignmentStatement(AssignmentStatement stmt) {
 		currSymTable = stackSymTable.peek();
+	
 		String idName = stmt.getId().getLexeme();
+		Token idType=new Token("$", Token.Type.EOF,1);
+		//System.out.println(currSymTable);
+		Entry e = currSymTable.getEntry(idName);
+		if(e == null)
+			e = getEntryFromImmediateOuterScope(idName);
+		int lineNo=0;
+		if(e != null) {
+			e.setInitialised(true);
+			idType = e.getType();
+			lineNo = e.getType().getLineNo();
+		}
+		
 		if(!currSymTable.contains(idName) && !isIdDeclaredInOuterScope(idName)) {
 			System.out.println("Error: The id " + idName + " on line " + stmt.getId().getLineNo() + " was used before being declared");
 			numErrors++;
 		}
+		
 		Expr expr = stmt.getExpr();
-		validateExpr(expr);
+		validateExpr(expr);		
+		if(!idType.getLexeme().equals(expr.getTypeString())) {
+			numErrors++;
+			System.out.println("Error: Variable [ " + idName + " ] on line " +  stmt.getId().getLineNo() + " has type [ " + idType.getLexeme() + 
+					" ] and is assigned the wrong type [ " + expr.getTypeString()+ " ]...");
+		}
 	}
 
 	/**
@@ -158,8 +180,18 @@ public class SemanticAnalyser {
 		for(Statement stmt : statements)
 			validateStatement(stmt);
 		
-		stackSymTable.pop();
+		SymbolTable symTop = stackSymTable.pop();
+		checkVarsInitAndUsage(symTop);
 		scopeStack.pop();
+	}
+	
+	private void checkVarsInitAndUsage(SymbolTable symTabl) {
+		for(Entry e : symTabl.getEntries()) {
+			if(!e.isInitialised())
+				numWarnings++;
+			if(!e.isUsed())
+				numWarnings++;
+		}
 	}
 	
 	/**
@@ -183,10 +215,10 @@ public class SemanticAnalyser {
 	 */
 	public void validateBooleanExpr(BooleanExpr expr) {
 		if(expr instanceof BooleanOp) {
-			BooleanExpr expr1 =  ((BooleanOp)expr).getExpr1();
-			BooleanExpr expr2 =  ((BooleanOp)expr).getExpr2();
-			validateBooleanExpr(expr1);
-			validateBooleanExpr(expr2);
+			Expr expr1 =  ((BooleanOp)expr).getExpr1();
+			Expr expr2 =  ((BooleanOp)expr).getExpr2();
+			validateExpr(expr1);
+			validateExpr(expr2);
 		}
 	}
 	
@@ -196,8 +228,14 @@ public class SemanticAnalyser {
 	 * @param stmt a instance of AddExpr AST
 	 */
 	public void validateAddExpr(AddExpr expr) {
-		IntExpr expr2 = expr.getExpr();
+		Expr expr2 = expr.getExpr();
 		validateExpr(expr2);
+		Digit digit = (Digit)expr.getDigit();
+		int lineNo = digit.getToken().getLineNo();
+		if(!"int".equals(expr2.getTypeString())) {
+			numErrors++;
+			System.out.println("Error: Expr on line " + lineNo + " has type [  int  ] and is added the wrong type [ " + expr2.getTypeString() + " ]...");
+		}
 	}
 	
 	/**
@@ -208,6 +246,15 @@ public class SemanticAnalyser {
 	public void validateId(Id id) {
 		currSymTable = stackSymTable.peek();
 		String idName = id.getToken().getLexeme();
+		Entry e = currSymTable.getEntry(idName);
+		if(e == null)
+			e = getEntryFromImmediateOuterScope(idName);
+		
+		if(e != null) {
+			e.setUsed(true);
+			id.setType(e.getType());
+		}
+		
 		if(!currSymTable.contains(idName) && !isIdDeclaredInOuterScope(idName)) {
 			System.out.println("Error: The id " + idName + " on line " + id.getToken().getLineNo() + " was used before being declared");
 			numErrors++;
@@ -224,6 +271,10 @@ public class SemanticAnalyser {
 	}
 
 	
+	public int getNumWarnings() {
+		return numWarnings;
+	}
+
 	public List<Entry> getEntries() {
 		return entries;
 	}
@@ -244,5 +295,14 @@ public class SemanticAnalyser {
 		}
 		return false;
 	}
+	
+	private Entry getEntryFromImmediateOuterScope(String id) {
+		int size = stackSymTable.size();
+		for(int i=size-1; i >=0 ; i--) {
+			SymbolTable symtbl = stackSymTable.get(i);
+			if(symtbl.contains(id))
+				return symtbl.getEntry(id);
+		}
+		return null;
+	}
 }
-
