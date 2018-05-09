@@ -205,7 +205,7 @@ public class CodeGenerator {
 		return true;
 	}
 	
-	public boolean genCodeVarDeclStmt(VariableDeclaration stmt) {
+	/*public boolean genCodeVarDeclStmt(VariableDeclaration stmt) {
 		StackTable currStackTable = globalStackTable.peek();
 		
 		String idName = stmt.getId().getLexeme();
