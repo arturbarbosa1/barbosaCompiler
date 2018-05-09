@@ -42,3 +42,39 @@ public class CodeGenerator {
 		tempVarAddrRefMap = new HashMap<String, List<Integer>>();
 	}
 	
+
+	public boolean generateCode() {
+		boolean ok = genCodeBlock((Block)ast);
+				
+		//code[nextAddress++] = "FF";
+		//code[nextAddress++] = "00";
+		
+		for(String tempVar : tempVarAddrRefMap.keySet()) {
+			List<Integer> addrRefs = tempVarAddrRefMap.get(tempVar);
+			for(int addr : addrRefs) {
+				code[addr] = nextAddress+"";
+				code[addr+1] = "00";				
+			}
+			nextAddress++;
+		}
+		return ok;
+	}
+	
+	private boolean genCodeBlock(Block block) {
+		globalStackTable.push(new StackTable());
+		
+		List<Statement> statements = block.getStatements();
+		for(Statement stmt : statements) {
+			if(!genCodeStatement(stmt))
+				return false;
+		}
+				
+		StackTable st = globalStackTable.pop();
+		for(String tempVar : st.getTempVarPosMap().keySet()) {
+			List<Integer> addrRefs = st.getTempVarPosMap().get(tempVar);
+			tempVarAddrRefMap.put(tempVar, addrRefs);
+		}		
+		
+		return true;
+	}
+	
