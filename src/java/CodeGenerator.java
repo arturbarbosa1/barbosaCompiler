@@ -260,3 +260,90 @@ public class CodeGenerator {
 	public boolean genCodeIfStmt(IfStatement stmt) {
 		return true;
 	}
+	
+	public String getCode() {
+		String s = "";
+		int k = 0;
+		for(int i= 0; i < nextAddress; i++) {
+			if(code[i] == null)
+				break;
+			k++;
+			if(k % 8 == 0) {
+				s += code[i]+"\n";
+				k = 0;
+			}
+			else {
+				s += code[i]+" ";
+			}
+		}
+		return s;
+	}
+	
+	public int getNumErrors() {
+		return numErrors;
+	}
+	
+	public int getNumWarnings() {
+		return numWarnings;
+	}
+	
+	
+	private String toHex(int dec) {
+		return String.format("%02x", dec);
+	}
+	
+	private StackTable getStackTableForId(String idName) {
+		int scopeLevels = globalStackTable.size();
+		for(int i = scopeLevels-1; i >= 0; i--) {
+			StackTable st = globalStackTable.get(i);
+			String tempVar = st.getIdTempVarMapping(idName);
+			if(tempVar != null)
+				return st;
+		}
+		return null;
+	}
+	
+	
+	class StackTable{
+		private HashMap<String, String> idToTempVarMap;
+		private HashMap<String, List<Integer>> tempVarPosMap;
+		
+		public StackTable() {
+			idToTempVarMap = new HashMap<String, String>();
+			tempVarPosMap = new HashMap<String, List<Integer>>();
+		}
+		
+		
+		public HashMap<String, List<Integer>> getTempVarPosMap() {
+			return tempVarPosMap;
+		}
+
+
+		public void addIdTempVarMapping(String idName, int tempVarNo) {
+			idToTempVarMap.put(idName, "t"+tempVarNo);
+		}
+		
+		public void addTempVarAddressRef(String tempVar, int address) {
+			if(!tempVarPosMap.containsKey(tempVar)) {
+				tempVarPosMap.put(tempVar, new ArrayList<Integer>());
+			}
+			tempVarPosMap.get(tempVar).add(address);
+		}
+		
+		public String getIdTempVarMapping(String idName) {
+			if(idToTempVarMap.containsKey(idName))
+				return idToTempVarMap.get(idName);
+			else
+				return null;
+		}
+		
+		public List<Integer> getTempVarAddrRefList(String tempVar){
+			if(tempVarPosMap.containsKey(tempVar))
+				return tempVarPosMap.get(tempVar);
+			else
+				return null;
+		}
+	}
+	
+}
+
