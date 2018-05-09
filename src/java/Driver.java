@@ -15,16 +15,7 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * This is the driver program to test the Lexer.
- *
- */
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
-/**
- * This is the driver program to test the Lexer.
+ * This is the driver for project 4
  *
  */
 public class Driver {
