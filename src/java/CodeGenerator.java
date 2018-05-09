@@ -108,7 +108,7 @@ public class CodeGenerator {
 	}
 	
 	public boolean genCodePrintStmt(PrintStatement stmt) {
-		StackTable currStackTable = globalStackTable.peek();
+		//StackTable currStackTable = globalStackTable.peek();
 		Expr expr = stmt.getExpr();
 		if(expr instanceof Id) {
 			Id id = (Id)expr;
@@ -117,12 +117,12 @@ public class CodeGenerator {
 			String idTempVar = st.getIdTempVarMapping(idName);
 			
 			if(id.getTypeString().equals("int")) {				
-				if(!tempVarPosMap.containsKey(idName)) {
-					tempVarPosMap.put(idTempVar, new ArrayList<Integer>());
-				}
+				//if(!tempVarPosMap.containsKey(idName)) {
+				//	tempVarPosMap.put(idTempVar, new ArrayList<Integer>());
+				//}
 				code[nextAddress++] = "AC";
 				st.addTempVarAddressRef(idTempVar, nextAddress);
-				tempVarPosMap.get(idTempVar).add(nextAddress);
+				//tempVarPosMap.get(idTempVar).add(nextAddress);
 				code[nextAddress++] = idTempVar;
 				code[nextAddress++] = "XX";
 				code[nextAddress++] = "A2";
@@ -130,12 +130,12 @@ public class CodeGenerator {
 				code[nextAddress++] = "FF";
 			}
 			else if(id.getTypeString().equals("string")) {				
-				if(!tempVarPosMap.containsKey(idName)) {
-				tempVarPosMap.put(idTempVar, new ArrayList<Integer>());
-				}
+//				if(!tempVarPosMap.containsKey(idName)) {
+//					tempVarPosMap.put(idTempVar, new ArrayList<Integer>());
+//				}
 				code[nextAddress++] = "AC";
 				st.addTempVarAddressRef(idTempVar, nextAddress);
-				tempVarPosMap.get(idTempVar).add(nextAddress);
+				//tempVarPosMap.get(idTempVar).add(nextAddress);
 				code[nextAddress++] = idTempVar;
 				code[nextAddress++] = "XX";
 				code[nextAddress++] = "A2";
