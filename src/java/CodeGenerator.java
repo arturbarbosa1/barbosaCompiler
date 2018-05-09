@@ -10,7 +10,13 @@
    * This file contains the Code Generator for project 4.
    *
    */
-   /**
+  
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Stack;
+
+/**
  * This class generates machine code based on parsed AST.
  *
  */
@@ -42,12 +48,16 @@ public class CodeGenerator {
 		tempVarAddrRefMap = new HashMap<String, List<Integer>>();
 	}
 	
-
+	/**
+	 * Generate object code for the parsed AST.
+	 * 
+	 * @return true if code generated without any error, else return false
+	 */
 	public boolean generateCode() {
 		boolean ok = genCodeBlock((Block)ast);
 				
 		//code[nextAddress++] = "FF";
-		//code[nextAddress++] = "00";
+		code[nextAddress++] = "00";
 		
 		for(String tempVar : tempVarAddrRefMap.keySet()) {
 			List<Integer> addrRefs = tempVarAddrRefMap.get(tempVar);
@@ -77,6 +87,7 @@ public class CodeGenerator {
 		
 		return true;
 	}
+	
 	
 	/**
 	 * Generate object code for any Statement.
