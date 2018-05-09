@@ -327,6 +327,10 @@ class BooleanOp extends BooleanExpr{
 	public Expr getExpr2() {
 		return expr2;
 	}
+	public Token getBoolOpToken() {
+		return boolOp;
+	}
+	
 	@Override
 	void print(int indentation) {
 		expr1.print(indentation);
@@ -376,5 +380,3 @@ class Id extends IntExpr {
 		System.out.println("[ " + id.getLexeme() + " ]");
 	}
 }
-
-
