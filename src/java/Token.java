@@ -2,11 +2,11 @@
    * file: Token.java
    * author: Artur Barbosa
    * course: CMPT 435
-   * assignment: project 1 lexer
-   * due date: 2/6/2018
+   * assignment: project 4 
+   * due date: 5/8/2018
    * 
    * 
-   * This file contains the token class for the lexer.project1
+   * This file contains the token class for the project 4
    *
    */
 public class Token {
