@@ -2,11 +2,11 @@
    * file: Lexer.java
    * author: Artur Barbosa
    * course: CMPT 435
-   * assignment: project 2 Parcer 
-   * due date: 4/3/2018
-   * Version 3
+   * assignment: project 4
+   * due date: 5/8/2018
+   * Version 4
    * 
-   * This file contains the lexer for project 1.
+   * This file contains the lexer for project 4.
    *
    */
 import java.util.ArrayList;
