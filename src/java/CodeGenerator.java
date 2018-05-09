@@ -78,3 +78,31 @@ public class CodeGenerator {
 		return true;
 	}
 	
+	/**
+	 * Generate object code for any Statement.
+	 * 
+	 * @param stmt an instance of subclass of Statement AST
+	 * @return true if code generated without any error, else return false
+	 */
+	public boolean genCodeStatement(Statement stmt) {
+		
+		if(stmt instanceof PrintStatement)
+			return genCodePrintStmt((PrintStatement)stmt);
+		
+		else if(stmt instanceof AssignmentStatement)
+			return genCodeAssignStmt((AssignmentStatement)stmt);
+		
+		else if(stmt instanceof WhileStatement)			
+			return genCodeWhileStmt((WhileStatement)stmt);
+		
+		else if(stmt instanceof IfStatement)			
+			return genCodeIfStmt((IfStatement)stmt);
+		
+		else if(stmt instanceof VariableDeclaration)
+			return genCodeVarDeclStmt((VariableDeclaration)stmt);
+		
+		else if(stmt instanceof Block)
+			return genCodeBlock((Block)stmt);		
+		else
+			return false;
+	}
