@@ -167,11 +167,11 @@ public class CodeGenerator {
 		StackTable st = getStackTableForId(idName);
 		String tempVar = st.getIdTempVarMapping(idName);
 		
-		Digit d = (Digit)expr;
-		int num = Integer.parseInt(d.getToken().getLexeme());
-		code[nextAddress++] = "A9";
-		code[nextAddress++] = toHex(num);
-		code[nextAddress++] = "8D";
-		st.addTempVarAddressRef(tempVar, nextAddress);
-		code[nextAddress++] = tempVar;
-		code[nextAddress++] = "XX";
+//		Digit d = (Digit)expr;
+//		int num = Integer.parseInt(d.getToken().getLexeme());
+//		code[nextAddress++] = "A9";
+//		code[nextAddress++] = toHex(num);
+//		code[nextAddress++] = "8D";
+//		st.addTempVarAddressRef(tempVar, nextAddress);
+//		code[nextAddress++] = tempVar;
+//		code[nextAddress++] = "XX";
