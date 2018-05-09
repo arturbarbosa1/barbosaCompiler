@@ -261,6 +261,11 @@ public class CodeGenerator {
 		return true;
 	}
 	
+	/**
+	 * Get the generated object code.
+	 * 
+	 * @return the object as a string
+	 */
 	public String getCode() {
 		String s = "";
 		int k = 0;
@@ -346,4 +351,5 @@ public class CodeGenerator {
 	}
 	
 }
+
 
