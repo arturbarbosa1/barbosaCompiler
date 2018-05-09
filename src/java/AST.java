@@ -270,6 +270,11 @@ class StringExpr extends Expr {
 	public StringExpr(String s) {
 		this.s = s;
 	}	
+	
+	public String getString() {
+		return s;
+	}
+	
 	@Override
 	void print(int indentation) {
 		for(int i=0; i < indentation; i++)
