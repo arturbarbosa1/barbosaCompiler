@@ -106,3 +106,45 @@ public class CodeGenerator {
 		else
 			return false;
 	}
+	
+	public boolean genCodePrintStmt(PrintStatement stmt) {
+		StackTable currStackTable = globalStackTable.peek();
+		Expr expr = stmt.getExpr();
+		if(expr instanceof Id) {
+			Id id = (Id)expr;
+			String idName = id.getToken().getLexeme();
+			StackTable st = getStackTableForId(idName);
+			String idTempVar = st.getIdTempVarMapping(idName);
+			
+			if(id.getTypeString().equals("int")) {				
+				if(!tempVarPosMap.containsKey(idName)) {
+					tempVarPosMap.put(idTempVar, new ArrayList<Integer>());
+				}
+				code[nextAddress++] = "AC";
+				st.addTempVarAddressRef(idTempVar, nextAddress);
+				tempVarPosMap.get(idTempVar).add(nextAddress);
+				code[nextAddress++] = idTempVar;
+				code[nextAddress++] = "XX";
+				code[nextAddress++] = "A2";
+				code[nextAddress++] = "01";
+				code[nextAddress++] = "FF";
+			}
+			else if(id.getTypeString().equals("string")) {				
+				if(!tempVarPosMap.containsKey(idName)) {
+				tempVarPosMap.put(idTempVar, new ArrayList<Integer>());
+				}
+				code[nextAddress++] = "AC";
+				st.addTempVarAddressRef(idTempVar, nextAddress);
+				tempVarPosMap.get(idTempVar).add(nextAddress);
+				code[nextAddress++] = idTempVar;
+				code[nextAddress++] = "XX";
+				code[nextAddress++] = "A2";
+				code[nextAddress++] = "02";
+				code[nextAddress++] = "FF";
+			}
+			else if(id.getTypeString().equals("boolean")) {
+				
+			}
+		}
+		return true;
+	}
