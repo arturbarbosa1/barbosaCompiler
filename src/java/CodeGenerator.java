@@ -176,6 +176,7 @@ public class CodeGenerator {
 //		code[nextAddress++] = tempVar;
 //		code[nextAddress++] = "XX";
 		
+		
 		if(expr instanceof Digit) {
 			Digit d = (Digit)expr;
 			int num = Integer.parseInt(d.getToken().getLexeme());
@@ -205,7 +206,8 @@ public class CodeGenerator {
 		return true;
 	}
 	
-	/*public boolean genCodeVarDeclStmt(VariableDeclaration stmt) {
+	
+	public boolean genCodeVarDeclStmt(VariableDeclaration stmt) {
 		StackTable currStackTable = globalStackTable.peek();
 		
 		String idName = stmt.getId().getLexeme();
@@ -220,5 +222,41 @@ public class CodeGenerator {
 		code[nextAddress++] = tempVar;
 		code[nextAddress++] = "XX";
 		
+		return true;
+	}
+	
+	public boolean genCodeWhileStmt(WhileStatement stmt) {
+		BooleanExpr boolExpr = stmt.getBoolExpr();
+		if(boolExpr instanceof BooleanOp) {
+			BooleanOp op = (BooleanOp)boolExpr;
+			Expr expr1 = op.getExpr1();
+			Expr expr2 = op.getExpr2();
+			Token boolOpToken = op.getBoolOpToken();
+			int lineNo = boolOpToken.getLineNo();
+			
+			if(!expr1.getTypeString().equals(expr2.getTypeString())) {
+				System.out.println("C.GEN --> Error! Comparison between incompatible expressions in line " + lineNo);
+				numErrors++;
+				return false;
+			}
+			if((expr1 instanceof StringExpr) && (expr2 instanceof Id)) {
+				System.out.println("C.GEN --> Error! Variable to string comparison is not allowed in line  " + lineNo);
+				numErrors++;
+				return false;
+			}
+			if((expr2 instanceof StringExpr) && (expr1 instanceof Id)) {
+				System.out.println("C.GEN --> Error! Variable to string comparison is not allowed in line  " + lineNo);
+				numErrors++;
+				return false;
+			}
+			
+		}
+		else {
+			BooleanValue boolVal = (BooleanValue)boolExpr;
+		}
+		return true;
+	}
+	
+	public boolean genCodeIfStmt(IfStatement stmt) {
 		return true;
 	}
