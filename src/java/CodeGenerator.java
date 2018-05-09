@@ -204,3 +204,21 @@ public class CodeGenerator {
 		
 		return true;
 	}
+	
+	public boolean genCodeVarDeclStmt(VariableDeclaration stmt) {
+		StackTable currStackTable = globalStackTable.peek();
+		
+		String idName = stmt.getId().getLexeme();
+		currStackTable.addIdTempVarMapping(idName, tempVarNo);
+		String tempVar = currStackTable.getIdTempVarMapping(idName);
+		tempVarNo++;
+		
+		code[nextAddress++] = "A9";
+		code[nextAddress++] = "00";		
+		code[nextAddress++] = "8D";
+		currStackTable.addTempVarAddressRef(tempVar, nextAddress);
+		code[nextAddress++] = tempVar;
+		code[nextAddress++] = "XX";
+		
+		return true;
+	}
