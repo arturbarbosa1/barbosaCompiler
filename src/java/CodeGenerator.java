@@ -175,3 +175,32 @@ public class CodeGenerator {
 //		st.addTempVarAddressRef(tempVar, nextAddress);
 //		code[nextAddress++] = tempVar;
 //		code[nextAddress++] = "XX";
+		
+		if(expr instanceof Digit) {
+			Digit d = (Digit)expr;
+			int num = Integer.parseInt(d.getToken().getLexeme());
+			code[nextAddress++] = "A9";
+			code[nextAddress++] = toHex(num);
+			code[nextAddress++] = "8D";
+			st.addTempVarAddressRef(tempVar, nextAddress);
+			code[nextAddress++] = tempVar;
+			code[nextAddress++] = "XX";
+		}
+		else if(expr instanceof StringExpr) {
+			
+		}
+		else if(expr instanceof Id) {
+			String idName2 = ((Id)expr).getToken().getLexeme();
+			String tempVar2 = st.getIdTempVarMapping(idName2);
+			code[nextAddress++] = "AD";
+			st.addTempVarAddressRef(tempVar2, nextAddress);
+			code[nextAddress++] = tempVar2;
+			code[nextAddress++] = "XX";
+			code[nextAddress++] = "8D";	
+			st.addTempVarAddressRef(tempVar, nextAddress);
+			code[nextAddress++] = tempVar;
+			code[nextAddress++] = "XX";
+		}
+		
+		return true;
+	}
