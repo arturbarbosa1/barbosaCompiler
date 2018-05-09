@@ -3,11 +3,11 @@
    * file: SymbolTable.java
    * author: Artur Barbosa
    * course: CMPT 432
-   * assignment: project 3 
-   * due date: 4/3/2018
-   * Version:2
+   * assignment: project 4
+   * due date: 5/8/2018
+   * Version:4
    * 
-   * This file contains the SymbolTable for project 3.
+   * This file contains the SymbolTable for project 4.
    *
    */
 import java.util.ArrayList;
