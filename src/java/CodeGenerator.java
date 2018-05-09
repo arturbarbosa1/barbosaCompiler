@@ -29,3 +29,16 @@ public class CodeGenerator {
 	
 	private Stack<StackTable> globalStackTable = new Stack<StackTable>();	
 	
+	/**
+	 * Class constructor for code generator that takes an AST parameter.
+	 * @param ast an instance of parsed AST 
+	 */
+	public CodeGenerator(AST ast) {
+		this.ast = ast;
+		nextAddress = 0;
+		tempVarNo = 0;
+		numErrors = 0;
+		numWarnings = 0;
+		tempVarAddrRefMap = new HashMap<String, List<Integer>>();
+	}
+	
