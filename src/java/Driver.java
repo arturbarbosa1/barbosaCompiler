@@ -2,13 +2,22 @@
    * file: Driver.java
    * author: Artur Barbosa
    * course: CMPT 432
-   * assignment: project 3 Parser 
-   * due date: 4/3/2018
-   * Version:3
+   * assignment: Project 4
+   * due date: 5/8/2018
+   * Version:4
    * 
-   * This file contains the Driver for project 3.
+   * This file contains the Driver for project 4.
    *
    */
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+/**
+ * This is the driver program to test the Lexer.
+ *
+ */
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +89,13 @@ public class Driver {
 						}
 						System.out.println("Program " + progNo + " Semantic Analysis produced " + semanticAnalyser.getNumErrors() + " error(s) and " + semanticAnalyser.getNumWarnings() + " warning(s)");
 						
-						System.out.println("\nProgram " + progNo+" Concerete Syntax Tree");
+						System.out.println("\nProgram " + progNo + " Code Generation");
+						
+						CodeGenerator generator = new CodeGenerator(ast);
+						boolean codeOk = generator.generateCode();
+						System.out.println("Program " + progNo + " Code Generator produced " + generator.getNumErrors() + " error(s) and " + generator.getNumWarnings() + " warning(s)");
+						
+						System.out.println("\n\nProgram " + progNo+" Concerete Syntax Tree");
 						System.out.println("-------------------------------------------");
 						System.out.println(parser.getCST());
 						
@@ -101,6 +116,13 @@ public class Driver {
 							System.out.println("not produced due to error(s) produced by semantic analysis");
 						}
 						
+						System.out.println("\nProgram " + progNo + " Machine Code");
+						if(codeOk) {
+							System.out.println(generator.getCode());
+						}
+						else {
+							System.out.println("not produced due to error(s) produced by code generator");
+						}
 					}else {
 						System.out.println("PARSER: Parse failed");
 						System.out.println("\nCST for program " + progNo+": Skipped due to PARSER error(s)");
