@@ -22,7 +22,7 @@ import java.util.Stack;
  */
 public class CodeGenerator {
 
-	final int CODE_MEMORY_SIZE = 100;
+	final int CODE_MEMORY_SIZE = 256;
 	
 	private AST ast;
 	private String[] code = new String[CODE_MEMORY_SIZE];
@@ -35,6 +35,8 @@ public class CodeGenerator {
 	
 	private Stack<StackTable> globalStackTable = new Stack<StackTable>();	
 	
+	private int heapEndAddr;
+	
 	/**
 	 * Class constructor for code generator that takes an AST parameter.
 	 * @param ast an instance of parsed AST 
@@ -46,6 +48,11 @@ public class CodeGenerator {
 		numErrors = 0;
 		numWarnings = 0;
 		tempVarAddrRefMap = new HashMap<String, List<Integer>>();
+		heapEndAddr = CODE_MEMORY_SIZE - 1;
+		
+		for(int i= 0; i < CODE_MEMORY_SIZE; i++) {
+			code[i] = "00";
+		}
 	}
 	
 	/**
@@ -188,7 +195,19 @@ public class CodeGenerator {
 			code[nextAddress++] = "XX";
 		}
 		else if(expr instanceof StringExpr) {
-			
+			String s = ((StringExpr)expr).getString();
+			code[heapEndAddr--] = "00";
+			for(int i = s.length()-1; i >= 0; i--) {
+				int c = (int)s.charAt(i);
+				String hex = toHex(c);
+				code[heapEndAddr--] = hex;
+			}
+			code[nextAddress++] = "A9";
+			code[nextAddress++] = toHex(heapEndAddr);
+			code[nextAddress++] = "8D";
+			st.addTempVarAddressRef(tempVar, nextAddress);
+			code[nextAddress++] = tempVar;
+			code[nextAddress++] = "XX";
 		}
 		else if(expr instanceof Id) {
 			String idName2 = ((Id)expr).getToken().getLexeme();
@@ -215,13 +234,14 @@ public class CodeGenerator {
 		String tempVar = currStackTable.getIdTempVarMapping(idName);
 		tempVarNo++;
 		
-		code[nextAddress++] = "A9";
-		code[nextAddress++] = "00";		
-		code[nextAddress++] = "8D";
-		currStackTable.addTempVarAddressRef(tempVar, nextAddress);
-		code[nextAddress++] = tempVar;
-		code[nextAddress++] = "XX";
-		
+		if(stmt.getType().getLexeme().equals("int")) {
+			code[nextAddress++] = "A9";
+			code[nextAddress++] = "00";		
+			code[nextAddress++] = "8D";
+			currStackTable.addTempVarAddressRef(tempVar, nextAddress);
+			code[nextAddress++] = tempVar;
+			code[nextAddress++] = "XX";
+		}			
 		return true;
 	}
 	
@@ -269,9 +289,7 @@ public class CodeGenerator {
 	public String getCode() {
 		String s = "";
 		int k = 0;
-		for(int i= 0; i < nextAddress; i++) {
-			if(code[i] == null)
-				break;
+		for(int i= 0; i < CODE_MEMORY_SIZE; i++) {
 			k++;
 			if(k % 8 == 0) {
 				s += code[i]+"\n";
@@ -351,5 +369,6 @@ public class CodeGenerator {
 	}
 	
 }
+
 
 
